@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
 // DELETE /api/orders/:id
@@ -8,13 +8,13 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const { userId } = await auth();
+  if (!userId) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
   const order = await prisma.order.findUnique({ where: { id: params.id } });
-  if (!order || order.userId !== session.user.id) {
+  if (!order || order.userId !== userId) {
     return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
   }
 

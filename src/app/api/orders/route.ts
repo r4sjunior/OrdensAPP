@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
 // POST /api/orders  { date?: "YYYY-MM-DD" }
 // Cria um novo registro de ordem de serviço realizada para o usuário logado.
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const { userId } = await auth();
+  if (!userId) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   }
 
   const order = await prisma.order.create({
-    data: { userId: session.user.id, date },
+    data: { userId, date },
   });
 
   return NextResponse.json(order, { status: 201 });
@@ -29,8 +29,8 @@ export async function POST(req: NextRequest) {
 // GET /api/orders?from=YYYY-MM-DD&to=YYYY-MM-DD
 // Lista as ordens do usuário logado num intervalo (usado no extrato/histórico).
 export async function GET(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const { userId } = await auth();
+  if (!userId) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
 
   const orders = await prisma.order.findMany({
     where: {
-      userId: session.user.id,
+      userId,
       ...(from && to
         ? {
             date: {

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ptBR } from "@clerk/localizations";
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -31,12 +33,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
-      <body
-        className={`${display.variable} ${body.variable} ${mono.variable} font-body bg-paper text-ink antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider
+      localization={ptBR}
+      appearance={{
+        variables: {
+          colorPrimary: "#C1502E",
+        },
+      }}
+    >
+      <html lang="pt-BR">
+        <body
+          className={`${display.variable} ${body.variable} ${mono.variable} font-body bg-paper text-ink antialiased`}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

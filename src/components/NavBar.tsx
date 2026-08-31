@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { auth, signOut } from "@/auth";
+import { currentUser } from "@clerk/nextjs/server";
+import { SignOutButton } from "@clerk/nextjs";
 
 export default async function NavBar({ active }: { active: "dashboard" | "extrato" }) {
-  const session = await auth();
+  const user = await currentUser();
+  const email = user?.primaryEmailAddress?.emailAddress;
 
   return (
     <header className="border-b border-line">
@@ -36,19 +38,14 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="hidden text-xs text-inkSoft sm:inline">
-            {session?.user?.email}
-          </span>
-          <form
-            action={async () => {
-              "use server";
-              await signOut({ redirectTo: "/" });
-            }}
-          >
-            <button type="submit" className="btn-ghost">
+          {email && (
+            <span className="hidden text-xs text-inkSoft sm:inline">{email}</span>
+          )}
+          <SignOutButton redirectUrl="/">
+            <button type="button" className="btn-ghost">
               Sair
             </button>
-          </form>
+          </SignOutButton>
         </div>
       </div>
     </header>

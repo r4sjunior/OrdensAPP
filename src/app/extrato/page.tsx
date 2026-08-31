@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import NavBar from "@/components/NavBar";
 import ExtratoView from "@/components/ExtratoView";
 
 export default async function ExtratoPage() {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const { userId } = await auth();
+  if (!userId) {
     redirect("/");
   }
 

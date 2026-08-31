@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
-import { auth, signIn } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
+import { SignInButton } from "@clerk/nextjs";
 
 export default async function Home() {
-  const session = await auth();
-  if (session?.user) {
+  const { userId } = await auth();
+  if (userId) {
     redirect("/dashboard");
   }
 
@@ -27,20 +28,15 @@ export default async function Home() {
           total do dia, da semana e do mês.
         </p>
 
-        <form
-          action={async () => {
-            "use server";
-            await signIn("google", { redirectTo: "/dashboard" });
-          }}
-        >
+        <SignInButton mode="modal" forceRedirectUrl="/dashboard">
           <button
-            type="submit"
+            type="button"
             className="flex w-full items-center justify-center gap-3 border-2 border-ink px-5 py-3 font-body text-sm font-medium text-ink transition-colors hover:bg-ink hover:text-paper"
           >
             <GoogleIcon />
             Entrar com Google
           </button>
-        </form>
+        </SignInButton>
       </div>
     </main>
   );

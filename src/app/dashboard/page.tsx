@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import NavBar from "@/components/NavBar";
 import OrderLogger from "@/components/OrderLogger";
 
 export default async function DashboardPage() {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const { userId } = await auth();
+  if (!userId) {
     redirect("/");
   }
 
@@ -14,7 +14,7 @@ export default async function DashboardPage() {
 
   const orders = await prisma.order.findMany({
     where: {
-      userId: session.user.id,
+      userId,
       date: new Date(`${today}T00:00:00.000Z`),
     },
     orderBy: { createdAt: "desc" },

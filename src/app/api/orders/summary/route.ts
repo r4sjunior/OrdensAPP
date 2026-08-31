@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import {
   startOfWeek,
@@ -12,8 +12,8 @@ import {
 
 // GET /api/orders/summary?period=daily|weekly|monthly&date=YYYY-MM-DD
 export async function GET(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const { userId } = await auth();
+  if (!userId) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
 
   const orders = await prisma.order.findMany({
     where: {
-      userId: session.user.id,
+      userId,
       date: { gte: rangeStart, lte: rangeEnd },
     },
     select: { date: true },
