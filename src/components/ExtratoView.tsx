@@ -36,6 +36,14 @@ function shortLabel(iso: string, period: Period) {
   return d.toLocaleDateString("pt-BR", { weekday: "short", timeZone: "UTC" }).replace(".", "");
 }
 
+// Cor da barra conforme a quantidade de ordens do dia:
+// 0 a 3 = vermelho, 4 = amarelo, acima de 4 = verde.
+function countColor(count: number) {
+  if (count <= 3) return "bg-red-500";
+  if (count === 4) return "bg-yellow-500";
+  return "bg-green-600";
+}
+
 function rangeLabel(s: Summary) {
   const fmt = (iso: string) =>
     new Date(`${iso}T00:00:00.000Z`).toLocaleDateString("pt-BR", {
@@ -151,10 +159,10 @@ export default function ExtratoView() {
               <div key={b.date} className="flex flex-1 flex-col items-center gap-2">
                 <div className="flex h-28 w-full items-end">
                   <div
-                    className={`w-full transition-all ${
+                    className={`w-full transition-all ${countColor(b.count)} ${
                       b.date === date && period !== "monthly"
-                        ? "bg-stamp"
-                        : "bg-teal/70"
+                        ? "opacity-100"
+                        : "opacity-70"
                     }`}
                     style={{
                       height: `${Math.max(4, (b.count / maxCount) * 100)}%`,
