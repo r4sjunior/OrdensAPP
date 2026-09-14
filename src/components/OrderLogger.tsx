@@ -7,6 +7,7 @@ type Stats = {
   totalOrders: number;
   firstDate: string | null;
   daysSpan: number;
+  workedDays: number;
   average: number;
 };
 
@@ -162,20 +163,28 @@ export default function OrderLogger({
 
         {error && <p className="text-sm text-stamp">{error}</p>}
 
-        <div className="grid w-full grid-cols-2 gap-4 border-t border-line pt-5 sm:pt-6">
+        <div className="grid w-full grid-cols-3 gap-2 border-t border-line pt-5 sm:gap-4 sm:pt-6">
           <div>
-            <div className="font-mono text-xl font-semibold tabular-nums text-ink sm:text-2xl">
+            <div className="font-mono text-lg font-semibold tabular-nums text-ink sm:text-2xl">
               {formatAverage(stats.average)}
             </div>
-            <p className="mt-1 text-[10px] uppercase tracking-wide text-inkSoft sm:text-xs">
+            <p className="mt-1 text-[9px] uppercase tracking-wide text-inkSoft sm:text-xs">
               média geral de ordens/dia
             </p>
           </div>
           <div>
-            <div className="font-mono text-xl font-semibold tabular-nums text-ink sm:text-2xl">
+            <div className="font-mono text-lg font-semibold tabular-nums text-ink sm:text-2xl">
+              {stats.workedDays}
+            </div>
+            <p className="mt-1 text-[9px] uppercase tracking-wide text-inkSoft sm:text-xs">
+              dias trabalhados
+            </p>
+          </div>
+          <div>
+            <div className="font-mono text-lg font-semibold tabular-nums text-ink sm:text-2xl">
               {stats.totalOrders}
             </div>
-            <p className="mt-1 text-[10px] uppercase tracking-wide text-inkSoft sm:text-xs">
+            <p className="mt-1 text-[9px] uppercase tracking-wide text-inkSoft sm:text-xs">
               total geral registrado
             </p>
           </div>

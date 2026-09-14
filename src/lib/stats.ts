@@ -7,13 +7,20 @@ export type OrderStats = {
   totalOrders: number;
   firstDate: string | null;
   daysSpan: number;
+  workedDays: number;
   average: number;
 };
 
 export async function getOrderStats(userId: string): Promise<OrderStats> {
-  const [totalOrders, agg] = await Promise.all([
+  const [totalOrders, agg, distinctDays] = await Promise.all([
     prisma.order.count({ where: { userId } }),
     prisma.order.aggregate({ where: { userId }, _min: { date: true } }),
+    // Dias trabalhados = dias distintos em que pelo menos 1 ordem foi registrada.
+    prisma.order.findMany({
+      where: { userId },
+      distinct: ["date"],
+      select: { date: true },
+    }),
   ]);
 
   const firstDate = agg._min.date;
@@ -31,6 +38,7 @@ export async function getOrderStats(userId: string): Promise<OrderStats> {
     totalOrders,
     firstDate: firstDate ? toISODate(firstDate) : null,
     daysSpan,
+    workedDays: distinctDays.length,
     average: totalOrders / daysSpan,
   };
 }
