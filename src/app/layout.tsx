@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ptBR } from "@clerk/localizations";
@@ -25,6 +25,15 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Ordens de Serviço",
   description: "Registro diário de ordens de serviço realizadas.",
+  appleWebApp: {
+    title: "Ordens OS",
+    capable: true,
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#C1502E",
 };
 
 export default function RootLayout({
