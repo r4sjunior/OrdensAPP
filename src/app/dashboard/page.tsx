@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { getOrderStats } from "@/lib/stats";
 import NavBar from "@/components/NavBar";
 import OrderLogger from "@/components/OrderLogger";
 
@@ -12,18 +13,21 @@ export default async function DashboardPage() {
 
   const today = new Date().toISOString().slice(0, 10);
 
-  const orders = await prisma.order.findMany({
-    where: {
-      userId,
-      date: new Date(`${today}T00:00:00.000Z`),
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  const [orders, stats] = await Promise.all([
+    prisma.order.findMany({
+      where: {
+        userId,
+        date: new Date(`${today}T00:00:00.000Z`),
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    getOrderStats(userId),
+  ]);
 
   return (
     <>
       <NavBar active="dashboard" />
-      <main className="mx-auto max-w-3xl px-6 py-10">
+      <main className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
         <OrderLogger
           initialDate={today}
           initialOrders={orders.map((o) => ({
@@ -31,6 +35,7 @@ export default async function DashboardPage() {
             date: o.date.toISOString(),
             createdAt: o.createdAt.toISOString(),
           }))}
+          initialStats={stats}
         />
       </main>
     </>

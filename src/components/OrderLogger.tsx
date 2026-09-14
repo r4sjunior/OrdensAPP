@@ -3,9 +3,19 @@
 import { useState, useTransition } from "react";
 
 type Order = { id: string; date: string; createdAt: string };
+type Stats = {
+  totalOrders: number;
+  firstDate: string | null;
+  daysSpan: number;
+  average: number;
+};
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function formatAverage(n: number) {
+  return n.toFixed(1).replace(".", ",");
 }
 
 function formatTime(iso: string) {
@@ -23,12 +33,15 @@ function formatDateBR(iso: string) {
 export default function OrderLogger({
   initialDate,
   initialOrders,
+  initialStats,
 }: {
   initialDate: string;
   initialOrders: Order[];
+  initialStats: Stats;
 }) {
   const [date, setDate] = useState(initialDate);
   const [orders, setOrders] = useState<Order[]>(initialOrders);
+  const [stats, setStats] = useState<Stats>(initialStats);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -43,6 +56,15 @@ export default function OrderLogger({
     }
     const data: Order[] = await res.json();
     setOrders(data);
+  }
+
+  // Busca a média atualizada no servidor, refletindo o total geral após cada mudança.
+  async function loadStats() {
+    const res = await fetch("/api/orders/stats");
+    if (res.ok) {
+      const data: Stats = await res.json();
+      setStats(data);
+    }
   }
 
   function handleDateChange(nextDate: string) {
@@ -64,6 +86,7 @@ export default function OrderLogger({
       }
       const created: Order = await res.json();
       setOrders((prev) => [created, ...prev]);
+      await loadStats();
     });
   }
 
@@ -76,7 +99,9 @@ export default function OrderLogger({
       if (!res.ok) {
         setError("Não foi possível remover o registro.");
         setOrders(prev);
+        return;
       }
+      await loadStats();
     });
   }
 
@@ -84,8 +109,8 @@ export default function OrderLogger({
 
   return (
     <div>
-      <div className="mb-10 flex flex-col items-center gap-6 border border-line bg-paper px-8 py-10 text-center">
-        <div className="flex items-center gap-3">
+      <div className="mb-8 flex flex-col items-center gap-5 border border-line bg-paper px-4 py-8 text-center sm:mb-10 sm:gap-6 sm:px-8 sm:py-10">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
             onClick={() => handleDateChange(dayBefore(date))}
@@ -100,7 +125,7 @@ export default function OrderLogger({
               value={date}
               max={todayISO()}
               onChange={(e) => handleDateChange(e.target.value)}
-              className="border-b border-line bg-transparent px-2 py-1 text-center font-mono text-sm text-ink"
+              className="w-[9.5rem] border-b border-line bg-transparent px-2 py-1 text-center font-mono text-sm text-ink sm:w-auto"
             />
             <span className="mt-1 text-xs text-inkSoft">
               {isToday ? "hoje" : formatDateBR(date)}
@@ -118,7 +143,7 @@ export default function OrderLogger({
         </div>
 
         <div>
-          <div className="font-mono text-6xl font-semibold tabular-nums text-ink">
+          <div className="font-mono text-5xl font-semibold tabular-nums text-ink sm:text-6xl">
             {orders.length}
           </div>
           <p className="mt-1 text-xs uppercase tracking-wide text-inkSoft">
@@ -130,17 +155,36 @@ export default function OrderLogger({
           type="button"
           onClick={handleRegister}
           disabled={isPending}
-          className="btn-stamp disabled:cursor-not-allowed disabled:opacity-50"
+          className="btn-stamp w-full disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           + Registrar ordem
         </button>
 
         {error && <p className="text-sm text-stamp">{error}</p>}
+
+        <div className="grid w-full grid-cols-2 gap-4 border-t border-line pt-5 sm:pt-6">
+          <div>
+            <div className="font-mono text-xl font-semibold tabular-nums text-ink sm:text-2xl">
+              {formatAverage(stats.average)}
+            </div>
+            <p className="mt-1 text-[10px] uppercase tracking-wide text-inkSoft sm:text-xs">
+              média diária de ordens
+            </p>
+          </div>
+          <div>
+            <div className="font-mono text-xl font-semibold tabular-nums text-ink sm:text-2xl">
+              {stats.totalOrders}
+            </div>
+            <p className="mt-1 text-[10px] uppercase tracking-wide text-inkSoft sm:text-xs">
+              total geral registrado
+            </p>
+          </div>
+        </div>
       </div>
 
       {orders.length > 0 && (
         <div className="border border-line">
-          <div className="border-b border-line px-5 py-3 text-xs uppercase tracking-wide text-inkSoft">
+          <div className="border-b border-line px-4 py-3 text-xs uppercase tracking-wide text-inkSoft sm:px-5">
             Registros de {formatDateBR(date)}
           </div>
           <ul>
@@ -154,14 +198,14 @@ export default function OrderLogger({
               .map((o, i) => (
                 <li
                   key={o.id}
-                  className={`flex items-center justify-between px-5 py-3 text-sm ${
+                  className={`flex items-center justify-between px-4 py-3 text-sm sm:px-5 ${
                     i > 0 ? "border-t border-line" : ""
                   }`}
                 >
                   <span className="text-inkSoft">
                     Ordem #{orders.length - i}
                   </span>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
                     <span className="font-mono text-ink">
                       {formatTime(o.createdAt)}
                     </span>

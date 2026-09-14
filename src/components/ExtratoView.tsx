@@ -44,6 +44,23 @@ function countColor(count: number) {
   return "bg-green-600";
 }
 
+function formatAvg(n: number) {
+  return n.toFixed(1).replace(".", ",");
+}
+
+// No mensal (até 31 barras) mostramos o número do dia só a cada 5 dias
+// (mais o dia 1 e o último), para não poluir o eixo em telas pequenas.
+function shouldShowLabel(iso: string, period: Period, isLast: boolean) {
+  if (period !== "monthly") return true;
+  const day = Number(iso.slice(8, 10));
+  return day === 1 || day % 5 === 0 || isLast;
+}
+
+function formatDateBR(iso: string) {
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
 function rangeLabel(s: Summary) {
   const fmt = (iso: string) =>
     new Date(`${iso}T00:00:00.000Z`).toLocaleDateString("pt-BR", {
@@ -102,14 +119,23 @@ export default function ExtratoView() {
     ? Math.max(1, ...summary.breakdown.map((b) => b.count))
     : 1;
 
+  const periodAvg =
+    summary && summary.breakdown.length > 0
+      ? summary.breakdown.reduce((sum, b) => sum + b.count, 0) /
+        summary.breakdown.length
+      : 0;
+
+  const isMonthly = period === "monthly";
+  const today = todayISO();
+
   return (
     <div>
-      <div className="mb-8 flex gap-2">
+      <div className="mb-6 flex flex-wrap gap-2 sm:mb-8">
         {(["daily", "weekly", "monthly"] as Period[]).map((p) => (
           <button
             key={p}
             onClick={() => setPeriod(p)}
-            className={`px-4 py-2 text-sm font-medium transition-colors ${
+            className={`px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:py-2 sm:text-sm ${
               period === p
                 ? "border-2 border-stamp text-stamp"
                 : "border border-line text-inkSoft hover:text-ink"
@@ -120,7 +146,7 @@ export default function ExtratoView() {
         ))}
       </div>
 
-      <div className="border border-line bg-paper p-8">
+      <div className="border border-line bg-paper p-4 sm:p-8">
         <div className="mb-6 flex items-center justify-between">
           <button
             onClick={() => setDate((d) => shiftDate(d, period, -1))}
@@ -131,7 +157,7 @@ export default function ExtratoView() {
           </button>
           <div className="text-center">
             <p className="text-sm capitalize text-inkSoft">
-              {summary ? rangeLabel(summary) : "\u00A0"}
+              {summary ? rangeLabel(summary) : " "}
             </p>
           </div>
           <button
@@ -145,7 +171,7 @@ export default function ExtratoView() {
         </div>
 
         <div className="mb-8 text-center">
-          <div className="font-mono text-6xl font-semibold tabular-nums text-ink">
+          <div className="font-mono text-5xl font-semibold tabular-nums text-ink sm:text-6xl">
             {loading ? "–" : summary?.total ?? 0}
           </div>
           <p className="mt-1 text-xs uppercase tracking-wide text-inkSoft">
@@ -154,27 +180,94 @@ export default function ExtratoView() {
         </div>
 
         {summary && summary.breakdown.length > 0 && (
-          <div className="flex h-40 items-end gap-1.5 border-t border-line pt-4">
-            {summary.breakdown.map((b) => (
-              <div key={b.date} className="flex flex-1 flex-col items-center gap-2">
-                <div className="flex h-28 w-full items-end">
-                  <div
-                    className={`w-full transition-all ${countColor(b.count)} ${
-                      b.date === date && period !== "monthly"
-                        ? "opacity-100"
-                        : "opacity-70"
-                    }`}
-                    style={{
-                      height: `${Math.max(4, (b.count / maxCount) * 100)}%`,
-                    }}
-                    title={`${b.count} ordem(ns)`}
-                  />
+          <div className="border-t border-line pt-4">
+            <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[10px] text-inkSoft sm:text-xs">
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-sm bg-red-500" /> 0–3
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-sm bg-yellow-500" /> 4
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-sm bg-green-600" /> 5+
+              </span>
+              <span className="ml-auto flex items-center gap-1.5">
+                <span className="inline-block h-px w-4 border-t border-dashed border-teal" />
+                média do período: {formatAvg(periodAvg)}
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <div
+                style={
+                  isMonthly
+                    ? { minWidth: summary.breakdown.length * 20 }
+                    : undefined
+                }
+              >
+                <div className="relative flex h-28 items-end gap-1 sm:gap-1.5">
+                  {periodAvg > 0 && (
+                    <div
+                      className="pointer-events-none absolute left-0 right-0 z-10 border-t border-dashed border-teal/70"
+                      style={{ bottom: `${(periodAvg / maxCount) * 100}%` }}
+                    />
+                  )}
+                  {summary.breakdown.map((b) => {
+                    const isSelected =
+                      b.date === date && period !== "monthly";
+                    const isTodayBar = b.date === today;
+                    return (
+                      <div
+                        key={b.date}
+                        className={`flex h-full items-end ${
+                          isMonthly ? "w-5 flex-none" : "flex-1"
+                        }`}
+                      >
+                        <div
+                          className={`w-full transition-all ${countColor(
+                            b.count
+                          )} ${
+                            isSelected
+                              ? "opacity-100"
+                              : isTodayBar
+                              ? "opacity-90 ring-1 ring-inset ring-ink/40"
+                              : "opacity-70"
+                          }`}
+                          style={{
+                            height: `${Math.max(
+                              4,
+                              (b.count / maxCount) * 100
+                            )}%`,
+                          }}
+                          title={`${formatDateBR(b.date)}: ${b.count} ordem(ns)`}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
-                <span className="font-mono text-[10px] text-inkSoft">
-                  {shortLabel(b.date, period)}
-                </span>
+
+                <div className="mt-2 flex gap-1 sm:gap-1.5">
+                  {summary.breakdown.map((b, i) => (
+                    <div
+                      key={b.date}
+                      className={`text-center ${
+                        isMonthly ? "w-5 flex-none" : "flex-1"
+                      }`}
+                    >
+                      <span className="font-mono text-[10px] text-inkSoft">
+                        {shouldShowLabel(
+                          b.date,
+                          period,
+                          i === summary.breakdown.length - 1
+                        )
+                          ? shortLabel(b.date, period)
+                          : ""}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         )}
       </div>

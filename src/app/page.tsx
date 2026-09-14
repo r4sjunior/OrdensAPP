@@ -9,10 +9,10 @@ export default async function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6">
-      <div className="w-full max-w-sm border border-line bg-paper p-10">
+    <main className="flex min-h-screen flex-col items-center justify-center px-4 py-10 sm:px-6">
+      <div className="w-full max-w-sm border border-line bg-paper p-6 sm:p-10">
         <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-stamp font-display text-lg font-bold text-stamp">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border-2 border-stamp font-display text-lg font-bold text-stamp">
             OS
           </div>
           <div>
