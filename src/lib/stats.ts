@@ -1,5 +1,6 @@
 // Calcula a média geral de ordens por dia de um usuário (não é a contagem de hoje).
-// Média = total geral de ordens já registradas ÷ dias corridos desde o primeiro registro até hoje.
+// Média = total geral de ordens já registradas ÷ dias trabalhados (dias com pelo menos 1 ordem),
+// ignorando dias sem nenhum registro no meio do período.
 import { prisma } from "./prisma";
 import { toISODate, startOfDay } from "./dates";
 
@@ -34,11 +35,13 @@ export async function getOrderStats(userId: string): Promise<OrderStats> {
     );
   }
 
+  const workedDays = distinctDays.length;
+
   return {
     totalOrders,
     firstDate: firstDate ? toISODate(firstDate) : null,
     daysSpan,
-    workedDays: distinctDays.length,
-    average: totalOrders / daysSpan,
+    workedDays,
+    average: workedDays > 0 ? totalOrders / workedDays : 0,
   };
 }
