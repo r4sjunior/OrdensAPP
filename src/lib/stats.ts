@@ -1,5 +1,5 @@
-// Calcula a média diária de ordens registradas por um usuário.
-// Média = total de ordens ÷ dias corridos desde o primeiro registro até hoje.
+// Calcula a média geral de ordens por dia de um usuário (não é a contagem de hoje).
+// Média = total geral de ordens já registradas ÷ dias corridos desde o primeiro registro até hoje.
 import { prisma } from "./prisma";
 import { toISODate, startOfDay } from "./dates";
 

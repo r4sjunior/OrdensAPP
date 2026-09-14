@@ -168,7 +168,7 @@ export default function OrderLogger({
               {formatAverage(stats.average)}
             </div>
             <p className="mt-1 text-[10px] uppercase tracking-wide text-inkSoft sm:text-xs">
-              média diária de ordens
+              média geral de ordens/dia
             </p>
           </div>
           <div>
