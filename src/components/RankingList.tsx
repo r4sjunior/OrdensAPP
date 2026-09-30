@@ -4,6 +4,73 @@ import { useEffect, useState } from "react";
 
 type Entry = { position: number; orders: number; isMe: boolean };
 
+const TROPHY_COLOR: Record<number, string> = {
+  1: "#D4A017", // ouro
+  2: "#9CA3AF", // prata
+  3: "#B0703C", // bronze
+};
+
+// Altura do degrau do pódio por posição.
+const STEP_HEIGHT: Record<number, string> = {
+  1: "h-24",
+  2: "h-16",
+  3: "h-12",
+};
+
+function Trophy({ color, size }: { color: string; size: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z" fill={color} fillOpacity="0.25" />
+      <path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3" />
+    </svg>
+  );
+}
+
+// Pódio clássico: 2º à esquerda, 1º no centro (mais alto), 3º à direita.
+function Podium({ entries }: { entries: Entry[] }) {
+  const byPosition = (p: number) => entries.find((e) => e.position === p);
+  return (
+    <div className="flex items-end justify-center gap-2 sm:gap-3">
+      {[2, 1, 3].map((p) => {
+        const e = byPosition(p);
+        return (
+          <div key={p} className="flex w-24 flex-col items-center sm:w-28">
+            <div className={e ? "" : "opacity-25"}>
+              <Trophy color={TROPHY_COLOR[p]} size={p === 1 ? 48 : 38} />
+            </div>
+            <span
+              className={`mt-1 font-mono text-xl font-semibold tabular-nums ${
+                e ? "text-ink" : "text-inkSoft"
+              }`}
+            >
+              {e ? e.orders : "–"}
+            </span>
+            <span className="mb-1 h-4 text-xs font-medium text-stamp">
+              {e?.isMe ? "Você" : ""}
+            </span>
+            <div
+              className={`flex w-full items-start justify-center border border-line pt-2 font-display text-2xl font-bold text-paper ${STEP_HEIGHT[p]}`}
+              style={{ backgroundColor: TROPHY_COLOR[p] }}
+            >
+              {p}º
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // Ranking anônimo: só posição e número de ordens; o usuário logado aparece como "Você".
 export default function RankingList({
   type,
@@ -44,6 +111,8 @@ export default function RankingList({
         <p className="text-sm text-inkSoft">Carregando…</p>
       ) : entries.length === 0 ? (
         <p className="text-sm text-inkSoft">Nenhuma ordem registrada no período.</p>
+      ) : type === "weekly" ? (
+        <Podium entries={entries} />
       ) : (
         <ol className="divide-y divide-line border-y border-line">
           {entries.map((e) => (
