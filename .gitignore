@@ -7,3 +7,6 @@ node_modules
 .DS_Store
 .env*
 next-env.d.ts
+
+# clerk configuration (can include secrets)
+/.clerk/

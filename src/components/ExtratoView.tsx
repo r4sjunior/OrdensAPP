@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import RankingList from "./RankingList";
 
 type Period = "daily" | "weekly" | "monthly";
 type Summary = {
@@ -271,6 +272,22 @@ export default function ExtratoView() {
           </div>
         )}
       </div>
+
+      {period === "weekly" && (
+        <RankingList
+          type="weekly"
+          date={date}
+          title="Ranking semanal"
+          subtitle="Top 3 da semana selecionada"
+        />
+      )}
+      {period === "monthly" && (
+        <RankingList
+          type="general"
+          title="Ranking geral"
+          subtitle="Todos os usuários, total de ordens desde o início"
+        />
+      )}
     </div>
   );
 }
