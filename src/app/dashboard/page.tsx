@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { getOrderStats } from "@/lib/stats";
+import { todayISO } from "@/lib/dates";
 import NavBar from "@/components/NavBar";
 import OrderLogger from "@/components/OrderLogger";
 
@@ -11,7 +12,7 @@ export default async function DashboardPage() {
     redirect("/");
   }
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayISO();
 
   const [orders, stats] = await Promise.all([
     prisma.order.findMany({

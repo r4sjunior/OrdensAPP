@@ -2,7 +2,7 @@
 // Média = total geral de ordens já registradas ÷ dias trabalhados (dias com pelo menos 1 ordem),
 // ignorando dias sem nenhum registro no meio do período.
 import { prisma } from "./prisma";
-import { toISODate, startOfDay } from "./dates";
+import { toISODate, startOfDay, today } from "./dates";
 
 export type OrderStats = {
   totalOrders: number;
@@ -28,7 +28,7 @@ export async function getOrderStats(userId: string): Promise<OrderStats> {
   let daysSpan = 1;
   if (firstDate) {
     const start = startOfDay(firstDate);
-    const end = startOfDay(new Date());
+    const end = today();
     daysSpan = Math.max(
       1,
       Math.round((end.getTime() - start.getTime()) / 86400000) + 1

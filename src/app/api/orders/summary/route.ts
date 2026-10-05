@@ -8,6 +8,7 @@ import {
   endOfMonth,
   addDays,
   toISODate,
+  today,
 } from "@/lib/dates";
 
 // GET /api/orders/summary?period=daily|weekly|monthly&date=YYYY-MM-DD
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const period = searchParams.get("period") ?? "daily";
   const dateParam = searchParams.get("date");
-  const ref = dateParam ? new Date(`${dateParam}T00:00:00.000Z`) : new Date();
+  const ref = dateParam ? new Date(`${dateParam}T00:00:00.000Z`) : today();
 
   let rangeStart: Date;
   let rangeEnd: Date;

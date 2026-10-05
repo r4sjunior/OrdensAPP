@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import RankingList from "./RankingList";
+import MonthlyHistory from "./MonthlyHistory";
+import { todayISO } from "@/lib/dates";
 
 type Period = "daily" | "weekly" | "monthly";
 type Summary = {
@@ -19,15 +21,15 @@ const PERIOD_LABEL: Record<Period, string> = {
   monthly: "Mensal",
 };
 
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 function shiftDate(iso: string, period: Period, dir: 1 | -1) {
   const d = new Date(`${iso}T00:00:00.000Z`);
   if (period === "daily") d.setUTCDate(d.getUTCDate() + dir);
   if (period === "weekly") d.setUTCDate(d.getUTCDate() + dir * 7);
-  if (period === "monthly") d.setUTCMonth(d.getUTCMonth() + dir);
+  // Vai para o dia 1 antes de trocar o mês, senão 31/10 - 1 mês vira "31/09" = 01/10.
+  if (period === "monthly") {
+    d.setUTCDate(1);
+    d.setUTCMonth(d.getUTCMonth() + dir);
+  }
   return d.toISOString().slice(0, 10);
 }
 
@@ -108,6 +110,28 @@ export default function ExtratoView() {
       cancelled = true;
     };
   }, [period, date]);
+
+  // Se o app ficou aberto (ex.: PWA em segundo plano) e o dia virou, quem estava
+  // olhando o período atual passa a ver o novo dia/semana/mês, em vez de continuar
+  // contando no período que já acabou.
+  useEffect(() => {
+    let lastToday = todayISO();
+    function syncToday() {
+      const now = todayISO();
+      const prev = lastToday;
+      if (now === prev) return;
+      lastToday = now;
+      setDate((d) => (d === prev ? now : d));
+    }
+    const interval = setInterval(syncToday, 60_000);
+    document.addEventListener("visibilitychange", syncToday);
+    window.addEventListener("focus", syncToday);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", syncToday);
+      window.removeEventListener("focus", syncToday);
+    };
+  }, []);
 
   // Desabilita o botão de "próximo período" quando já estamos no período atual.
   const isCurrent = useMemo(() => {
@@ -279,6 +303,12 @@ export default function ExtratoView() {
           date={date}
           title="Ranking semanal"
           subtitle="Top 3 da semana selecionada"
+        />
+      )}
+      {period === "monthly" && (
+        <MonthlyHistory
+          selectedMonth={date.slice(0, 7)}
+          onSelect={(month) => setDate(`${month}-01`)}
         />
       )}
       {period === "monthly" && (

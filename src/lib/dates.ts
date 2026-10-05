@@ -1,6 +1,25 @@
 // Helpers de data usados para montar os extratos (diário, semanal, mensal).
 // Semana começa na segunda-feira (padrão BR).
 
+// Fuso usado para decidir qual é "hoje" (e, portanto, a virada do dia/mês).
+// Sem isso, após as 21h no Brasil o UTC já está no dia seguinte.
+export const APP_TIME_ZONE = "America/Sao_Paulo";
+
+// Data de hoje (YYYY-MM-DD) no fuso de Brasília.
+export function todayISO(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: APP_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+// "Hoje" como Date à meia-noite UTC, no mesmo formato das datas salvas no banco.
+export function today(): Date {
+  return new Date(`${todayISO()}T00:00:00.000Z`);
+}
+
 export function toISODate(d: Date): string {
   return d.toISOString().slice(0, 10);
 }

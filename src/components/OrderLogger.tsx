@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { todayISO } from "@/lib/dates";
 
 type Order = { id: string; date: string; createdAt: string };
 type Stats = {
@@ -10,10 +11,6 @@ type Stats = {
   workedDays: number;
   average: number;
 };
-
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
 
 function formatAverage(n: number) {
   return n.toFixed(1).replace(".", ",");

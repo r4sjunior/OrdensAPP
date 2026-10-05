@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { todayISO } from "@/lib/dates";
 
 // POST /api/orders  { date?: "YYYY-MM-DD" }
 // Cria um novo registro de ordem de serviço realizada para o usuário logado.
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json().catch(() => ({}));
-  const dateStr: string = body?.date ?? new Date().toISOString().slice(0, 10);
+  const dateStr: string = body?.date ?? todayISO();
 
   // Guarda apenas a data (sem hora), evitando problemas de fuso.
   const date = new Date(`${dateStr}T00:00:00.000Z`);
