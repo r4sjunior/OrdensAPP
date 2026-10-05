@@ -111,9 +111,9 @@ repositório antes de seguir para o deploy.
    `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` e `CLERK_SECRET_KEY` — use as chaves
    de **produção** do Clerk (passo 2.4), não as de desenvolvimento.
 4. Faça o deploy.
-5. Depois do primeiro deploy, rode `npm run db:push` **apontando para o
-   banco de produção** (ou rode `npx prisma db push` localmente usando o
-   `.env` com as credenciais de produção) para criar a tabela lá também.
+5. As tabelas são criadas/atualizadas sozinhas a cada deploy (o `build`
+   roda `prisma db push`). Se uma mudança no schema for apagar dados, o
+   deploy falha e avisa em vez de apagar.
 
 ---
 
