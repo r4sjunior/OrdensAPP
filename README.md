@@ -142,8 +142,7 @@ links da equipe técnica. Quem está logado com o Google vê tudo.
 - `/rose` — busca · `/rose/r/<slug>` — link direto
 - Respostas em `src/lib/rose/kb.json` (editar e fazer deploy). Fotos, vídeos e
   planilhas em `public/kb/`.
-- O texto da senha master **não** fica no git (repositório público): vem da
-  variável `ROSE_SIGILOSO` (base64 de `{"slug": "texto"}`), configurada na Vercel.
+- `kb.json` tem as senhas master: **o repositório tem que continuar privado.**
 
 ## Extensões possíveis
 
