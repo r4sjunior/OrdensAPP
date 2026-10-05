@@ -59,6 +59,15 @@ function shouldShowLabel(iso: string, period: Period, isLast: boolean) {
   return day === 1 || day % 5 === 0 || isLast;
 }
 
+function monthName(iso: string) {
+  const label = new Date(`${iso.slice(0, 7)}-01T00:00:00.000Z`).toLocaleDateString("pt-BR", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
 function formatDateBR(iso: string) {
   const [y, m, d] = iso.split("-");
   return `${d}/${m}/${y}`;
@@ -297,12 +306,20 @@ export default function ExtratoView() {
         )}
       </div>
 
+      {period === "daily" && (
+        <RankingList
+          type="daily"
+          date={date}
+          title="Ranking diário"
+          subtitle="Top 3 do dia selecionado · zera todo dia às 0:00"
+        />
+      )}
       {period === "weekly" && (
         <RankingList
           type="weekly"
           date={date}
           title="Ranking semanal"
-          subtitle="Top 3 da semana selecionada"
+          subtitle="Top 3 da semana selecionada (sáb–sex) · zera todo sábado às 0:00"
         />
       )}
       {period === "monthly" && (
@@ -312,11 +329,21 @@ export default function ExtratoView() {
         />
       )}
       {period === "monthly" && (
-        <RankingList
-          type="general"
-          title="Ranking geral"
-          subtitle="Todos os usuários, total de ordens desde o início"
-        />
+        <>
+          <RankingList
+            type="monthly"
+            date={date.slice(0, 7) + "-01"}
+            title="Ranking do mês"
+            subtitle={`${monthName(date)} · zera todo dia 1º às 0:00`}
+          />
+          <RankingList
+            type="monthly"
+            date={shiftDate(date.slice(0, 7) + "-01", "monthly", -1)}
+            top={3}
+            title="Campeões do mês anterior"
+            subtitle={`Top 3 de ${monthName(shiftDate(date, "monthly", -1))}`}
+          />
+        </>
       )}
     </div>
   );

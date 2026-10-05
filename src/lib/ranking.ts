@@ -2,7 +2,7 @@
 // A única informação de identidade retornada é `isMe`, para o usuário logado
 // reconhecer a própria posição.
 import { prisma } from "./prisma";
-import { startOfWeek, endOfWeek } from "./dates";
+import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfDay } from "./dates";
 
 export type RankingEntry = {
   position: number;
@@ -30,12 +30,27 @@ async function countByUser(
   }));
 }
 
-// Top 3 da semana (segunda a domingo) que contém `reference`.
+// Top 3 do dia `reference` (zera todo dia às 0:00).
+export function getDailyRanking(currentUserId: string, reference: Date) {
+  const day = startOfDay(reference);
+  return countByUser(currentUserId, { date: { gte: day, lte: day } }, 3);
+}
+
+// Top 3 da semana (sábado a sexta) que contém `reference`.
 export function getWeeklyRanking(currentUserId: string, reference: Date) {
   return countByUser(
     currentUserId,
     { date: { gte: startOfWeek(reference), lte: endOfWeek(reference) } },
     3
+  );
+}
+
+// Ranking do mês que contém `reference` (zera todo dia 1º). `take` limita ao top N.
+export function getMonthlyRanking(currentUserId: string, reference: Date, take?: number) {
+  return countByUser(
+    currentUserId,
+    { date: { gte: startOfMonth(reference), lte: endOfMonth(reference) } },
+    take
   );
 }
 

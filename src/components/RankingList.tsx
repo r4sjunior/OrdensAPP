@@ -75,11 +75,13 @@ function Podium({ entries }: { entries: Entry[] }) {
 export default function RankingList({
   type,
   date,
+  top,
   title,
   subtitle,
 }: {
-  type: "weekly" | "general";
+  type: "daily" | "weekly" | "monthly" | "general";
   date?: string;
+  top?: number;
   title: string;
   subtitle: string;
 }) {
@@ -88,7 +90,10 @@ export default function RankingList({
   useEffect(() => {
     let cancelled = false;
     setEntries(null);
-    const qs = type === "weekly" ? `type=weekly&date=${date}` : "type=general";
+    const params = new URLSearchParams({ type });
+    if (date && type !== "general") params.set("date", date);
+    if (top) params.set("top", String(top));
+    const qs = params.toString();
     fetch(`/api/orders/ranking?${qs}`)
       .then((r) => r.json())
       .then((data) => {
@@ -100,7 +105,10 @@ export default function RankingList({
     return () => {
       cancelled = true;
     };
-  }, [type, date]);
+  }, [type, date, top]);
+
+  // Pódio para os rankings top 3 (diário, semanal e campeões do mês); lista para o resto.
+  const showPodium = type === "daily" || type === "weekly" || top === 3;
 
   return (
     <div className="mt-6 border border-line bg-paper p-4 sm:p-8">
@@ -111,7 +119,7 @@ export default function RankingList({
         <p className="text-sm text-inkSoft">Carregando…</p>
       ) : entries.length === 0 ? (
         <p className="text-sm text-inkSoft">Nenhuma ordem registrada no período.</p>
-      ) : type === "weekly" ? (
+      ) : showPodium ? (
         <Podium entries={entries} />
       ) : (
         <ol className="divide-y divide-line border-y border-line">
