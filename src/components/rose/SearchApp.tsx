@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Entry } from "@/lib/rose/types";
 import EntryCard from "./EntryCard";
 
@@ -14,10 +14,9 @@ export default function SearchApp({ categories }: { categories: string[] }) {
   const [hits, setHits] = useState<Hit[]>([]);
   const [answered, setAnswered] = useState(true);
   const [loading, setLoading] = useState(true);
-  const logTimer = useRef<ReturnType<typeof setTimeout>>();
 
-  const run = useCallback(async (query: string, log: boolean) => {
-    const res = await fetch(`/api/rose/search?q=${encodeURIComponent(query)}${log ? "&log=1" : ""}`);
+  const run = useCallback(async (query: string) => {
+    const res = await fetch(`/api/rose/search?q=${encodeURIComponent(query)}`);
     const data = (await res.json()) as { hits: Hit[]; answered: boolean };
     setHits(data.hits);
     setAnswered(data.answered);
@@ -31,10 +30,7 @@ export default function SearchApp({ categories }: { categories: string[] }) {
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => run(q, false), 120);
-    clearTimeout(logTimer.current);
-    // se a pessoa parou de digitar e não achou nada, vira "lacuna" para o admin cadastrar
-    if (q.trim().length >= 3) logTimer.current = setTimeout(() => run(q, true), 2500);
+    const t = setTimeout(() => run(q), 120);
     return () => clearTimeout(t);
   }, [q, run]);
 
@@ -48,8 +44,7 @@ export default function SearchApp({ categories }: { categories: string[] }) {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            clearTimeout(logTimer.current);
-            run(q, true);
+            run(q);
             (document.activeElement as HTMLElement | null)?.blur();
           }}
         >
@@ -97,7 +92,7 @@ export default function SearchApp({ categories }: { categories: string[] }) {
           {searching && !answered && (
             <div className="mt-2 rounded-sm border border-dashed border-stamp/60 px-4 py-3 text-sm">
               <p className="font-medium">A Rose ainda não sabe isso.</p>
-              <p className="mt-1 text-inkSoft">Ficou anotado para o pessoal cadastrar. {shown.length > 0 && "Talvez seja algum destes:"}</p>
+              {shown.length > 0 && <p className="mt-1 text-inkSoft">Talvez seja algum destes:</p>}
             </div>
           )}
 

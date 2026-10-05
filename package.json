@@ -8,14 +8,12 @@
     "start": "next start",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
-    "db:studio": "prisma studio",
-    "rose:import": "node scripts/rose-import.mjs"
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@clerk/localizations": "^3.9.0",
     "@clerk/nextjs": "^6.12.0",
     "@prisma/client": "^5.22.0",
-    "@vercel/blob": "^2.8.0",
     "next": "^14.2.32",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

@@ -9,14 +9,14 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Help Rose — Ordens de Serviço" };
 
 export default async function RosePage() {
-  const entries = await listEntries();
+  const entries = listEntries();
   const used = new Set(entries.map((e) => e.category));
   const categories = [...CATEGORIES.filter((c) => used.has(c)), ...[...used].filter((c) => !(CATEGORIES as readonly string[]).includes(c))];
 
   return (
     <>
       <NavBar active="rose" />
-      <RoseHeader active="busca" />
+      <RoseHeader />
       <SearchApp categories={categories} />
     </>
   );

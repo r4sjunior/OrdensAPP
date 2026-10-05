@@ -61,7 +61,6 @@ export default function EntryCard({
   const [copied, setCopied] = useState(false);
 
   function toggle() {
-    if (!open) fetch("/api/rose/hit", { method: "POST", body: JSON.stringify({ slug: entry.slug }) }).catch(() => {});
     setOpen(!open);
   }
 

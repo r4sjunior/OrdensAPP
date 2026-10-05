@@ -1,0 +1,591 @@
+[
+  {
+    "id": "senha-master",
+    "slug": "senha-master",
+    "title": "Senhas master de ONT e roteadores",
+    "category": "Senhas e acessos",
+    "keywords": [
+      "senha master",
+      "senhas",
+      "senha",
+      "senha supervisor",
+      "login modem",
+      "login ont",
+      "acesso master",
+      "usuario e senha",
+      "support",
+      "senha calix",
+      "senha nokia",
+      "senha zte",
+      "senha huawei",
+      "senha zhone",
+      "senha intelbras",
+      "senha technicolor",
+      "senha hitron",
+      "senha tp link",
+      "senha iphotonix",
+      "senha hfc",
+      "senha wifi",
+      "senha roteador",
+      "gateway"
+    ],
+    "content": "",
+    "media": [],
+    "sensitive": true,
+    "hits": 6,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "achar-cto",
+    "slug": "achar-cto",
+    "title": "Achar CTO",
+    "category": "Links e sistemas",
+    "keywords": [
+      "achar cto",
+      "cto",
+      "localizar cto",
+      "mapa cto",
+      "caixa cto",
+      "onde fica cto"
+    ],
+    "content": "Painel para localizar CTO:\nhttps://datastudio.google.com/reporting/30d58958-985c-4719-af47-bbc0a03f8c2d/page/wkBUC",
+    "media": [],
+    "sensitive": false,
+    "hits": 2,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "ip-os-mobile",
+    "slug": "ip-os-mobile",
+    "title": "IP / endereço do OS Mobile",
+    "category": "Links e sistemas",
+    "keywords": [
+      "ip os mobile",
+      "ip mobile",
+      "ip os",
+      "os mobile ip",
+      "servidor os mobile",
+      "endereco os mobile",
+      "os mobile"
+    ],
+    "content": "osmobile.alaresinternet.com.br:8080\n\n150.230.66.181:8080",
+    "media": [],
+    "sensitive": false,
+    "hits": 3,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "app-os-mobile",
+    "slug": "app-os-mobile",
+    "title": "App OS Mobile (APK)",
+    "category": "Links e sistemas",
+    "keywords": [
+      "app os mobile",
+      "apk os mobile",
+      "baixar os mobile",
+      "instalar os mobile",
+      "os mobile",
+      "aplicativo os"
+    ],
+    "content": "Versão 3.6.4 do OS Mobile para Android. Depois de instalar, configure o servidor (veja “IP / endereço do OS Mobile”).",
+    "media": [
+      {
+        "type": "file",
+        "src": "/kb/OsMobile-3.6.4.apk",
+        "name": "OsMobile 3.6.4.apk"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "canais-atendimento",
+    "slug": "canais-atendimento",
+    "title": "Canais de atendimento (COPE)",
+    "category": "Links e sistemas",
+    "keywords": [
+      "canais de atendimento",
+      "fila cope",
+      "cope",
+      "atendimento cope",
+      "cope cabo",
+      "portal tecnico"
+    ],
+    "content": "Portal técnico — clique em “cope-cabo”:\nhttps://alaresinternet.digital/tecnico/#",
+    "media": [],
+    "sensitive": false,
+    "hits": 2,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "telefone-cope",
+    "slug": "telefone-cope",
+    "title": "Telefone (telefonia)",
+    "category": "Links e sistemas",
+    "keywords": [
+      "telefone telefonia",
+      "telefone",
+      "telefonia",
+      "numero telefone",
+      "bot telefonia"
+    ],
+    "content": "Não vá ligar a cobrar, hein...\n\n2010-9018",
+    "media": [],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "controle-universal",
+    "slug": "controle-universal",
+    "title": "Código do controle universal",
+    "category": "TV e decoder",
+    "keywords": [
+      "controle universal",
+      "codigo controle",
+      "controle amino",
+      "controle intek",
+      "controle arion",
+      "controle novo"
+    ],
+    "content": "INTEK : 5037\nARION : 5038\nAMINO PRATA A50: 5039\nAMINO 620 . : 5088 \"Controle Novo \"\nAMINO 7x. : 5088 \" Controle Novo \"",
+    "media": [],
+    "sensitive": false,
+    "hits": 2,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "reset-decoder",
+    "slug": "reset-decoder",
+    "title": "Reset de decoder (Intek / Arion)",
+    "category": "TV e decoder",
+    "keywords": [
+      "reset decoder",
+      "resetar decoder",
+      "reset intek",
+      "reset arion",
+      "senha decoder",
+      "reset master"
+    ],
+    "content": "DECODERS\n\nINTEK = (PRATA)\nReset Master:  1404\nReset Normal: 0000\n\nINTEK = 22CX :(PRETO)\nReset Master:  1404\nReset Normal: 0000\n\nARION = ARC 1010HR\nReset Master: 1916\nReset Normal: 0000",
+    "media": [],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "audio-amino",
+    "slug": "audio-amino",
+    "title": "Amino sem áudio em alguns canais",
+    "category": "TV e decoder",
+    "keywords": [
+      "audio amino",
+      "amino sem audio",
+      "sem audio",
+      "sem som",
+      "ac3",
+      "hdmi capabilities",
+      "a50 sem audio",
+      "a620 sem audio",
+      "7x sem audio",
+      "canal sem audio"
+    ],
+    "content": "Configuração de áudio, quando alguns canais de filmes não apresenta áudio e os demais normais:\n\nA620: Pressione o botão Menu no controle/Selecione a opção Opções do Equipamento/No campo de senha, digite o seis primeiros dígitos ou completo o CPF/CNPJ do titular./Na opção AUDIO, vá AC3 desabita / muda a faixa de áudio.\n\nA50: Pressione o botão Menu no controle/Selecione a opção Opções do Equipamento/No campo de senha, digite o seis primeiros dígitos ou completo o CPF/CNPJ do titular./Na opção AUDIO, vá em HDMI Capabilities, aperte OK e selecione a opção 2 Channel PCM.\n\nSetop IPTV amino 7x\nDesabilitar a função AC3\nSalvar a informação em submit antes\nDe sair do menu ...\nObs:  não e necessário alterar HDMI capabilities no 7x",
+    "media": [],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "host-amino",
+    "slug": "host-amino",
+    "title": "Host Amino (atualização)",
+    "category": "TV e decoder",
+    "keywords": [
+      "host amino",
+      "amino host",
+      "atualizar amino",
+      "mcfs",
+      "cabotv"
+    ],
+    "content": "http://aminen.cabo.tv.br/client/Amino/mn10/A50.mcfs\n\nhttp://gg.gg/cabotv",
+    "media": [],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "pacote-basico",
+    "slug": "pacote-basico",
+    "title": "Canais do pacote básico (TV básica)",
+    "category": "TV e decoder",
+    "keywords": [
+      "pacote basico",
+      "tv basica",
+      "canais basico",
+      "pacotes tv",
+      "basica",
+      "grade de canais",
+      "lista de canais"
+    ],
+    "content": "Aberto/Público: Band HD, InterTV HD, Rede Brasil, TV Assembleia, TV Brasil, TV Brasil 2, TV Câmara Federal, TV Câmara Municipal, TV Escola, TV Feliz, TV Futuro HD, TV Ponta Negra, TV Senado, TV Tropical HD\nCanais reservados: Canal Reservado\nCortesia e ecumênicos: Boa Vontade TV, Canção Nova HD, Record News, Rede Gênesis, Rede Super, Rede Vida HD, Shoptime, TV Mundo Maior, TV Potiguar, TV União HD\nNotícias: CNN Brasil\nOutros: TVU RN",
+    "media": [
+      {
+        "type": "image",
+        "src": "/kb/pacote-basico.jpg",
+        "name": "Canais TV Básica"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "hd-master",
+    "slug": "hd-master",
+    "title": "Canais do pacote HD Master",
+    "category": "TV e decoder",
+    "keywords": [
+      "hd master",
+      "pacote hd master",
+      "canais hd master",
+      "top hd",
+      "pacotes tv"
+    ],
+    "content": "",
+    "media": [
+      {
+        "type": "image",
+        "src": "/kb/hd-master.jpg",
+        "name": "Canais HD Master"
+      }
+    ],
+    "sensitive": false,
+    "hits": 0,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "hd-super",
+    "slug": "hd-super",
+    "title": "Canais do pacote HD Super",
+    "category": "TV e decoder",
+    "keywords": [
+      "hd super",
+      "pacote hd super",
+      "canais hd super",
+      "top hd",
+      "pacotes tv"
+    ],
+    "content": "",
+    "media": [
+      {
+        "type": "image",
+        "src": "/kb/hd-super.jpg",
+        "name": "Canais HD Super"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "deezer",
+    "slug": "deezer",
+    "title": "Deezer",
+    "category": "TV e decoder",
+    "keywords": [
+      "deezer",
+      "musica",
+      "app deezer"
+    ],
+    "content": "",
+    "media": [
+      {
+        "type": "image",
+        "src": "/kb/deezer.jpg",
+        "name": "Deezer"
+      }
+    ],
+    "sensitive": false,
+    "hits": 0,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "config-wifi-premium",
+    "slug": "config-wifi-premium",
+    "title": "Configuração TP-Link — Wi-Fi Premium",
+    "category": "Configuração de equipamentos",
+    "keywords": [
+      "configuracao wifi premium",
+      "wifi premium",
+      "tp link",
+      "configurar tp link",
+      "roteador premium",
+      "mesh tp link"
+    ],
+    "content": "Passo a passo em PDF.",
+    "media": [
+      {
+        "type": "pdf",
+        "src": "/kb/config-wifi-premium.pdf",
+        "name": "Configuração TP LINK - WIFI PREMIUM.pdf"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "config-huawei",
+    "slug": "config-huawei",
+    "title": "Configuração Huawei (vídeo)",
+    "category": "Configuração de equipamentos",
+    "keywords": [
+      "configuracao huawei",
+      "configurar huawei",
+      "huawei",
+      "huawei wifi 6",
+      "provisionar huawei"
+    ],
+    "content": "",
+    "media": [
+      {
+        "type": "video",
+        "src": "/kb/config-huawei.mp4",
+        "name": "Configuração Huawei"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "config-zte",
+    "slug": "config-zte",
+    "title": "Configuração ZTE (vídeo)",
+    "category": "Configuração de equipamentos",
+    "keywords": [
+      "configuracao zte",
+      "configurar zte",
+      "zte",
+      "zte wifi 6",
+      "h3601p"
+    ],
+    "content": "",
+    "media": [
+      {
+        "type": "video",
+        "src": "/kb/config-zte.mp4",
+        "name": "Configuração ZTE"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "zte-mesh-ont",
+    "slug": "zte-mesh-ont",
+    "title": "ZTE — roteamento mesh com ONT",
+    "category": "Configuração de equipamentos",
+    "keywords": [
+      "zte mesh ont",
+      "roteamento mesh",
+      "mesh",
+      "zte mesh",
+      "mesh ont"
+    ],
+    "content": "Tópico preparado pelo Leandro Silvestre. São 3 vídeos — no export só veio o primeiro; os outros dois ainda precisam ser adicionados aqui.",
+    "media": [
+      {
+        "type": "video",
+        "src": "/kb/zte-mesh-ont.mp4",
+        "name": "ZTE mesh — parte 1"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "sinal-ont-2232",
+    "slug": "sinal-ont-2232",
+    "title": "Ver sinal na ONT FGA2232",
+    "category": "Configuração de equipamentos",
+    "keywords": [
+      "sinal ont 2232",
+      "sinal 2232",
+      "fga2232 sinal",
+      "potencia 2232",
+      "sinal ont",
+      "2232"
+    ],
+    "content": "",
+    "media": [
+      {
+        "type": "video",
+        "src": "/kb/sinal-ont-2232.mp4",
+        "name": "Sinal ONT 2232"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "dns",
+    "slug": "dns",
+    "title": "DNS",
+    "category": "Rede e HFC",
+    "keywords": [
+      "dns",
+      "servidor dns",
+      "dns primario",
+      "dns secundario"
+    ],
+    "content": "- First DNS Server       189.124.132.33\n\n  - Second DNS Server 189.124.132.32",
+    "media": [],
+    "sensitive": false,
+    "hits": 2,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "cmts",
+    "slug": "cmts",
+    "title": "Nodos × CMTS",
+    "category": "Rede e HFC",
+    "keywords": [
+      "cmts",
+      "nodo cmts",
+      "qual cmts",
+      "sokka",
+      "katara",
+      "durotan",
+      "nodos"
+    ],
+    "content": "SOKKA: NA02, NA04, NA05, NA07, NA09, NA10, NA12, NA14, NA21, NA24, NA28, NA29, NA30, NA35, NA39, NA41, NA42, NA44, NA45, NA46, NA58, NA64, PA01, PA06, PA14, PA15, PA16, PA27\n\nKATARA: NA03, NA06, NA08, NA15, NA16, NA17, NA19, NA20, NA22, NA25, NA26, NA31, NA32, NA33, NA37, NA80, PA18, PA19, PA20, PA24, PA26, PA40, PA42, PA43, PA44, PA45, PA46, PA47, PA48, PA49, PA50, PA51, PA52, PA53, PA54, PA55, PA56, PA57, PA58, PA59, PA60, PA62, PA63, PA65\n\nDUROTAN: NA40, NA47, NA49, NA50, NA51, NA52, NA60, NA61, NA62, NA63, PA02, PA03, PA04, PA05, PA07, PA08, PA09, PA13, PA25\n\n4ª coluna (nome cortado na foto): NA11, NA18, NA23, NA36, PA12, PA17, PA36, PA37, PA39, PA61",
+    "media": [
+      {
+        "type": "image",
+        "src": "/kb/cmts-nodos.jpg",
+        "name": "Planilha nodos/CMTS"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "nodos-hfc-desativados",
+    "slug": "nodos-hfc-desativados",
+    "title": "Nodos HFC desativados",
+    "category": "Rede e HFC",
+    "keywords": [
+      "nodos hfc desativado",
+      "nodo desativado",
+      "hfc desativado",
+      "mapa nodos",
+      "arcgis"
+    ],
+    "content": "Mapa dos nodos desativados:\nhttps://www.arcgis.com/apps/dashboards/189d2563c8fe4231b3617d70ca254c77",
+    "media": [],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "check-list",
+    "slug": "check-list",
+    "title": "Check list de fechamento da OS",
+    "category": "Procedimentos",
+    "keywords": [
+      "check list",
+      "checklist",
+      "cheque list",
+      "fechamento os",
+      "causa do defeito",
+      "modelo fechamento"
+    ],
+    "content": "CAUSA DO DEFEITO:\n\nCOMO FOI RESOLVIDO:\n\nLOCAL DA ONT:  LOCAL  TESTE DE VELOCIDADE:\n                                DISPOSITIVO DO ASSINANTE\n( ) COMPUTADOR ( ) FAST, ( ) GIGA\n( ) SMARTPHONE, () DUAL , ( ) APENAS 2.4Ghz\n( ) SMART TV /( ) WI-FI/ ( ) CABO DE REDE\n( ) OUTROS:\n                                DISPOSITIVO DO TÉCNICO\n(  ) COMPUTADOR (  ) FAST, (  ) GIGA\n(  ) SMARTPHONE, (  ) DUAL , (  ) APENAS 2.4Ghz\n(  ) OUTROS:\n\nCOBERTURA  DA REDE WI-FI:  ( ) CONFORME  () NÃO CONFORME\n\n( ) ALTERAR O LOCAL DO MODEM/ONT LOCAL :\n\n( ) INSTALAÇÃO DE ROTEADORES/REPETIDORES",
+    "media": [],
+    "sensitive": false,
+    "hits": 0,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "sem-os",
+    "slug": "sem-os",
+    "title": "Sem OS (áudio)",
+    "category": "Procedimentos",
+    "keywords": [
+      "sem os",
+      "sem ordem",
+      "sem ordens",
+      "standby"
+    ],
+    "content": "",
+    "media": [
+      {
+        "type": "audio",
+        "src": "/kb/sem-os.opus",
+        "name": "Áudio — sem OS"
+      }
+    ],
+    "sensitive": false,
+    "hits": 0,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "escala",
+    "slug": "escala",
+    "title": "Escala dos técnicos",
+    "category": "Procedimentos",
+    "keywords": [
+      "escala",
+      "escala do mes",
+      "escala tecnicos",
+      "plantao",
+      "folga",
+      "scala",
+      "escala outubro",
+      "escala do mes de outubro"
+    ],
+    "content": "Escala de outubro/2026 — técnicos em manutenção de assinantes.",
+    "media": [
+      {
+        "type": "file",
+        "src": "/kb/escala-out-2026.xlsx",
+        "name": "ESCALA_DOS_TÉCNICO_EM_MANUTENÇÃO_DE_ASSINANTES_OUTUBRO_26.xlsx"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T21:42:18.278Z"
+  }
+]

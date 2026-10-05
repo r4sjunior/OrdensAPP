@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-// Faixa da Rose logo abaixo do NavBar do OrdensAPP: identidade + Buscar / Painel.
-export default function RoseHeader({ active }: { active?: "busca" | "admin" }) {
+// Faixa da Rose logo abaixo do NavBar do OrdensAPP.
+export default function RoseHeader() {
   return (
     <div className="border-b border-line bg-paperDim/60">
       <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
@@ -13,14 +13,6 @@ export default function RoseHeader({ active }: { active?: "busca" | "admin" }) {
             <div className="text-xs text-inkSoft">ajuda de campo</div>
           </div>
         </Link>
-        <nav className="flex gap-4 text-sm">
-          <Link href="/rose" className={active === "busca" ? "font-medium text-ink" : "text-inkSoft hover:text-ink"}>
-            Buscar
-          </Link>
-          <Link href="/rose/admin" className={active === "admin" ? "font-medium text-ink" : "text-inkSoft hover:text-ink"}>
-            Painel
-          </Link>
-        </nav>
       </div>
     </div>
   );

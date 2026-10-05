@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
-import { signedIn } from "@/lib/rose/auth";
+import { auth } from "@clerk/nextjs/server";
 import { search } from "@/lib/rose/search";
-import { listEntries, logMiss } from "@/lib/rose/store";
+import { listEntries } from "@/lib/rose/store";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
-  if (!(await signedIn())) return NextResponse.json({ error: "Faça login." }, { status: 401 });
-  const url = new URL(req.url);
-  const q = url.searchParams.get("q") ?? "";
-  const entries = await listEntries();
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Faça login." }, { status: 401 });
+  const q = new URL(req.url).searchParams.get("q") ?? "";
+  const entries = listEntries();
 
   if (!q.trim()) {
     const top = [...entries].sort((a, b) => b.hits - a.hits);
@@ -18,8 +18,5 @@ export async function GET(req: Request) {
 
   const hits = search(entries, q, 12);
   const answered = hits.some((h) => h.confidence !== "baixa");
-  // só registra lacuna quando a pessoa terminou de digitar (o app manda log=1)
-  if (!answered && url.searchParams.get("log") === "1") await logMiss(q);
-
   return NextResponse.json({ answered, hits });
 }

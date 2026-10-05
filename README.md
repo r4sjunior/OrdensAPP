@@ -137,16 +137,13 @@ prisma/schema.prisma           # modelo único: Order (userId do Clerk + data)
 ## Help Rose
 
 Aba **Help Rose** no topo (à esquerda): busca de senhas, códigos, configurações e
-links da equipe técnica (veio do app RoseAPP). Quem está logado com o Google vê
-tudo, inclusive as senhas master — não existe mais código da equipe.
+links da equipe técnica. Quem está logado com o Google vê tudo.
 
-- `/rose` — busca · `/rose/r/<slug>` — link direto · `/rose/admin` — painel
-  (cadastrar respostas e ver lacunas; pede `ROSE_ADMIN_PASSWORD`)
-- Dados no Postgres: tabelas `RoseEntry` e `RoseMiss`. Depois de
-  `npm run db:push`, importe a base da Rose antiga com `npm run rose:import`
-  (lê `RoseAPP/data/kb.json` e `misses.json`; não sobrescreve o que já existe).
-- Mídias que já existiam ficam em `public/kb/`. Uploads novos vão para o
-  Vercel Blob (`BLOB_READ_WRITE_TOKEN`).
+- `/rose` — busca · `/rose/r/<slug>` — link direto
+- Respostas em `src/lib/rose/kb.json` (editar e fazer deploy). Fotos, vídeos e
+  planilhas em `public/kb/`.
+- O texto da senha master **não** fica no git (repositório público): vem da
+  variável `ROSE_SIGILOSO` (base64 de `{"slug": "texto"}`), configurada na Vercel.
 
 ## Extensões possíveis
 

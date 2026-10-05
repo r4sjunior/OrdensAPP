@@ -8,7 +8,7 @@ import { getEntry } from "@/lib/rose/store";
 export const dynamic = "force-dynamic";
 
 export default async function EntryPage({ params }: { params: { slug: string } }) {
-  const entry = await getEntry(params.slug);
+  const entry = getEntry(params.slug);
   if (!entry) notFound();
 
   return (
