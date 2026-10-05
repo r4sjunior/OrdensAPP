@@ -334,7 +334,7 @@ export default function ExtratoView() {
             type="monthly"
             date={date.slice(0, 7) + "-01"}
             title="Ranking do mês"
-            subtitle={`${monthName(date)} · zera todo dia 1º às 0:00`}
+            subtitle={`${monthName(date)} · zera na virada do mês, à meia-noite`}
           />
           <RankingList
             type="monthly"
