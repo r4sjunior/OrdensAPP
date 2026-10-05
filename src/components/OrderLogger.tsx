@@ -166,7 +166,7 @@ export default function OrderLogger({
               {formatAverage(stats.average)}
             </div>
             <p className="mt-1 text-[9px] uppercase tracking-wide text-inkSoft sm:text-xs">
-              média geral de ordens/dia
+              média do mês (ordens/dia)
             </p>
           </div>
           <div>
@@ -174,7 +174,7 @@ export default function OrderLogger({
               {stats.workedDays}
             </div>
             <p className="mt-1 text-[9px] uppercase tracking-wide text-inkSoft sm:text-xs">
-              dias trabalhados
+              dias trabalhados no mês
             </p>
           </div>
           <div>
@@ -182,7 +182,7 @@ export default function OrderLogger({
               {stats.totalOrders}
             </div>
             <p className="mt-1 text-[9px] uppercase tracking-wide text-inkSoft sm:text-xs">
-              total geral registrado
+              total do mês
             </p>
           </div>
         </div>

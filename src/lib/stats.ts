@@ -1,8 +1,8 @@
-// Calcula a média geral de ordens por dia de um usuário (não é a contagem de hoje).
-// Média = total geral de ordens já registradas ÷ dias trabalhados (dias com pelo menos 1 ordem),
-// ignorando dias sem nenhum registro no meio do período.
+// Números do mês atual de um usuário (zeram na virada do mês, no fuso de Brasília).
+// Média = ordens do mês ÷ dias trabalhados no mês (dias com pelo menos 1 ordem),
+// ignorando dias sem nenhum registro. Meses anteriores ficam no histórico mensal.
 import { prisma } from "./prisma";
-import { toISODate, startOfDay, today } from "./dates";
+import { toISODate, startOfDay, today, startOfMonth, endOfMonth } from "./dates";
 
 export type OrderStats = {
   totalOrders: number;
@@ -13,12 +13,14 @@ export type OrderStats = {
 };
 
 export async function getOrderStats(userId: string): Promise<OrderStats> {
+  const now = today();
+  const where = { userId, date: { gte: startOfMonth(now), lte: endOfMonth(now) } };
   const [totalOrders, agg, distinctDays] = await Promise.all([
-    prisma.order.count({ where: { userId } }),
-    prisma.order.aggregate({ where: { userId }, _min: { date: true } }),
-    // Dias trabalhados = dias distintos em que pelo menos 1 ordem foi registrada.
+    prisma.order.count({ where }),
+    prisma.order.aggregate({ where, _min: { date: true } }),
+    // Dias trabalhados = dias distintos do mês em que pelo menos 1 ordem foi registrada.
     prisma.order.findMany({
-      where: { userId },
+      where,
       distinct: ["date"],
       select: { date: true },
     }),
@@ -28,7 +30,7 @@ export async function getOrderStats(userId: string): Promise<OrderStats> {
   let daysSpan = 1;
   if (firstDate) {
     const start = startOfDay(firstDate);
-    const end = today();
+    const end = now;
     daysSpan = Math.max(
       1,
       Math.round((end.getTime() - start.getTime()) / 86400000) + 1

@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getOrderStats } from "@/lib/stats";
 
 // GET /api/orders/stats
-// Retorna o total geral de ordens e a média geral de ordens/dia do usuário logado.
+// Retorna o total, os dias trabalhados e a média de ordens/dia do mês atual do usuário logado.
 // Recalculado sob demanda, então reflete imediatamente cada novo registro.
 export async function GET() {
   const { userId } = await auth();
