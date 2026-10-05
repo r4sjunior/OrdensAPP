@@ -1,0 +1,9 @@
+node_modules
+.next
+.env
+.env.local
+next-env.d.ts
+*.tsbuildinfo
+# a base de conhecimento tem senhas de equipamentos — nunca vai para o git
+data/*.json
+!data/exemplo.json

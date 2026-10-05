@@ -1,0 +1,69 @@
+[
+  {
+    "id": "achar-cto",
+    "slug": "achar-cto",
+    "title": "Achar CTO",
+    "category": "Links e sistemas",
+    "keywords": [
+      "achar cto",
+      "cto",
+      "localizar cto",
+      "mapa cto",
+      "caixa cto",
+      "onde fica cto"
+    ],
+    "content": "Painel para localizar CTO:\nhttps://datastudio.google.com/reporting/30d58958-985c-4719-af47-bbc0a03f8c2d/page/wkBUC",
+    "media": [],
+    "sensitive": false,
+    "hits": 2,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "ip-os-mobile",
+    "slug": "ip-os-mobile",
+    "title": "IP / endereço do OS Mobile",
+    "category": "Links e sistemas",
+    "keywords": [
+      "ip os mobile",
+      "ip mobile",
+      "ip os",
+      "os mobile ip",
+      "servidor os mobile",
+      "endereco os mobile",
+      "os mobile"
+    ],
+    "content": "osmobile.alaresinternet.com.br:8080\n\n150.230.66.181:8080",
+    "media": [],
+    "sensitive": false,
+    "hits": 3,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  },
+  {
+    "id": "app-os-mobile",
+    "slug": "app-os-mobile",
+    "title": "App OS Mobile (APK)",
+    "category": "Links e sistemas",
+    "keywords": [
+      "app os mobile",
+      "apk os mobile",
+      "baixar os mobile",
+      "instalar os mobile",
+      "os mobile",
+      "aplicativo os"
+    ],
+    "content": "Versão 3.6.4 do OS Mobile para Android. Depois de instalar, configure o servidor (veja “IP / endereço do OS Mobile”).",
+    "media": [
+      {
+        "type": "file",
+        "src": "/kb/OsMobile-3.6.4.apk",
+        "name": "OsMobile 3.6.4.apk"
+      }
+    ],
+    "sensitive": false,
+    "hits": 1,
+    "source": "rose",
+    "updatedAt": "2026-10-05T00:00:00.000Z"
+  }
+]

@@ -1,9 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// As rotas /api/orders/* verificam a sessão internamente (via auth() do
+// As rotas /api/orders/* e /api/rose/* verificam a sessão internamente (via auth() do
 // Clerk) e respondem com JSON 401 quando não autenticado, então não
 // precisam de proteção aqui — só as páginas que exigem login.
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/extrato(.*)"]);
+const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/extrato(.*)", "/rose(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {

@@ -27,3 +27,29 @@ model Presence {
 
   @@index([lastSeen])
 }
+
+// ---------- Rose (Help Rose): base de respostas da equipe técnica ----------
+
+// Uma resposta da Rose (senha, código, configuração, link...).
+// media = [{ type, src, name }] (fotos, vídeos, PDFs em /kb ou no Vercel Blob).
+model RoseEntry {
+  slug      String   @id
+  title     String
+  category  String
+  keywords  String[]
+  content   String   @default("")
+  media     Json     @default("[]")
+  sensitive Boolean  @default(false) // senhas etc. (no Telegram vão só no privado)
+  hits      Int      @default(0)
+  source    String   @default("novo") // "rose" = veio da Rose antiga
+  updatedAt DateTime @updatedAt
+}
+
+// Lacuna: o que alguém buscou e a Rose não soube responder.
+model RoseMiss {
+  query  String   @id // já normalizada (sem acento, minúscula)
+  count  Int      @default(1)
+  lastAt DateTime @default(now())
+
+  @@index([count])
+}
