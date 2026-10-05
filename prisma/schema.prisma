@@ -18,3 +18,12 @@ model Order {
 
   @@index([userId, date])
 }
+
+// Presença: cada usuário logado com o app aberto atualiza `lastSeen` periodicamente.
+// "Conectados" = usuários com lastSeen recente (ver /api/presence).
+model Presence {
+  userId   String   @id // Clerk user id
+  lastSeen DateTime @default(now())
+
+  @@index([lastSeen])
+}
