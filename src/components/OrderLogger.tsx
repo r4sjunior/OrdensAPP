@@ -2,6 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { todayISO } from "@/lib/dates";
+import { campaignPhase } from "@/lib/campaign";
+import type { MyCampaign } from "@/lib/tickets";
+import CampaignCard from "./CampaignCard";
 
 type Order = { id: string; date: string; createdAt: string };
 type Stats = {
@@ -32,16 +35,20 @@ export default function OrderLogger({
   initialDate,
   initialOrders,
   initialStats,
+  initialCampaign,
 }: {
   initialDate: string;
   initialOrders: Order[];
   initialStats: Stats;
+  initialCampaign: MyCampaign;
 }) {
   const [date, setDate] = useState(initialDate);
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [stats, setStats] = useState<Stats>(initialStats);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  // Muda a cada ordem registrada/removida para o card da campanha recarregar os tickets.
+  const [campaignKey, setCampaignKey] = useState(0);
 
   async function loadDay(nextDate: string) {
     setError(null);
@@ -79,11 +86,13 @@ export default function OrderLogger({
         body: JSON.stringify({ date }),
       });
       if (!res.ok) {
-        setError("Não foi possível registrar a ordem.");
+        const body = await res.json().catch(() => null);
+        setError(body?.error ?? "Não foi possível registrar a ordem.");
         return;
       }
       const created: Order = await res.json();
       setOrders((prev) => [created, ...prev]);
+      setCampaignKey((k) => k + 1);
       await loadStats();
     });
   }
@@ -99,14 +108,19 @@ export default function OrderLogger({
         setOrders(prev);
         return;
       }
+      setCampaignKey((k) => k + 1);
       await loadStats();
     });
   }
 
   const isToday = date === todayISO();
+  // Durante a campanha os pódios valem tickets, então só dá para registrar no dia.
+  const lockedPastDay = !isToday && campaignPhase() === "active";
 
   return (
     <div>
+      <CampaignCard initial={initialCampaign} refreshKey={campaignKey} />
+
       <div className="mb-8 flex flex-col items-center gap-5 border border-line bg-paper px-4 py-8 text-center sm:mb-10 sm:gap-6 sm:px-8 sm:py-10">
         <div className="flex items-center gap-2 sm:gap-3">
           <button
@@ -152,11 +166,17 @@ export default function OrderLogger({
         <button
           type="button"
           onClick={handleRegister}
-          disabled={isPending}
+          disabled={isPending || lockedPastDay}
           className="btn-stamp w-full disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           + Registrar ordem
         </button>
+
+        {lockedPastDay && (
+          <p className="-mt-2 text-xs text-inkSoft">
+            Durante a campanha da Caixinha de Gela só dá para registrar ordens de hoje.
+          </p>
+        )}
 
         {error && <p className="text-sm text-stamp">{error}</p>}
 

@@ -121,7 +121,7 @@ repositório antes de seguir para o deploy.
 
 ```
 src/
-  middleware.ts              # protege /dashboard e /extrato via Clerk
+  middleware.ts              # protege /dashboard, /extrato, /rose e /perfil via Clerk
   lib/prisma.ts               # cliente Prisma
   lib/dates.ts                 # helpers de data/semana/mês
   app/
@@ -143,6 +143,25 @@ links da equipe técnica. Quem está logado com o Google vê tudo.
 - Respostas em `src/lib/rose/kb.json` (editar e fazer deploy). Fotos, vídeos e
   planilhas em `public/kb/`.
 - `kb.json` tem as senhas master: **o repositório tem que continuar privado.**
+
+## Sorteio da Caixinha de Gela
+
+Campanha de 01/11 a 20/12 (datas em `src/lib/campaign.ts`).
+
+- **Tickets** (`src/lib/tickets.ts`): 1 por ordem registrada no próprio dia; 1º lugar do
+  dia +2, da semana (sáb–sex) +7, do mês +10 (empate: todos ganham). Calculados a partir
+  das ordens — nada guardado à parte. Durante a campanha só dá para registrar ordens de hoje.
+- **Sorte**: no Registrar, cada um escolhe quantos tickets depositar (não dá para desfazer;
+  só entre 01/11 e 20/12). Peso na roleta = 1 + √sorte. Todo cadastrado entra, mesmo com 0.
+- **Chamada**: animação 8-bit que abre sozinha uma vez por aparelho e reabre no card.
+- **Avatar**: `/perfil` troca a foto (fica no Clerk). Só aparece na roleta.
+- **`/adm`**: login próprio (`ADM_USER` / `ADM_PASSWORD` nas variáveis de ambiente).
+  Lista quem está na roda com a chance de cada um. **VALENDO** sorteia o vencedor no
+  servidor e grava tudo (tabela `Draw`); a roleta aparece em todo celular com o app
+  aberto e gira 2 minutos depois, sincronizada. Marque **Teste** para ensaiar sem
+  aparecer para ninguém. "Encerrar sorteio" tira a roleta da tela de todos.
+- Para testar a campanha antes de novembro, no `.env` local:
+  `NEXT_PUBLIC_CAMPAIGN_START="2026-10-01"` (não coloque na Vercel).
 
 ## Extensões possíveis
 

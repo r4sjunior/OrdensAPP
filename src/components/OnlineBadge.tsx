@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PRESENCE_EVENT } from "./LiveDraw";
 
 const HEARTBEAT_MS = 30_000;
 
 // Bolinha verde + número de usuários conectados agora.
-// Enquanto a aba está visível, envia um sinal de presença a cada 30s.
+// Enquanto a aba está visível, envia um sinal de presença a cada 30s. A resposta
+// também diz se há sorteio na tela; repassa para o LiveDraw por um evento.
 export default function OnlineBadge() {
   const [online, setOnline] = useState<number | null>(null);
 
@@ -17,8 +19,10 @@ export default function OnlineBadge() {
       try {
         const res = await fetch("/api/presence", { method: "POST" });
         if (!res.ok) return;
-        const data: { online: number } = await res.json();
-        if (!cancelled) setOnline(data.online);
+        const data: { online: number; drawId: string | null } = await res.json();
+        if (cancelled) return;
+        setOnline(data.online);
+        window.dispatchEvent(new CustomEvent(PRESENCE_EVENT, { detail: { drawId: data.drawId } }));
       } catch {
         // sem rede: mantém o último valor
       }

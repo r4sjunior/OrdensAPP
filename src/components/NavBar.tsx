@@ -2,8 +2,9 @@ import Link from "next/link";
 import { currentUser } from "@clerk/nextjs/server";
 import { SignOutButton } from "@clerk/nextjs";
 import OnlineBadge from "./OnlineBadge";
+import LiveDraw from "./LiveDraw";
 
-export default async function NavBar({ active }: { active: "dashboard" | "extrato" | "rose" }) {
+export default async function NavBar({ active }: { active: "dashboard" | "extrato" | "rose" | "perfil" }) {
   const user = await currentUser();
   const email = user?.primaryEmailAddress?.emailAddress;
 
@@ -60,8 +61,23 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
 
         <div className="flex items-center gap-3 sm:gap-4">
           <OnlineBadge />
+          <LiveDraw />
           {email && (
             <span className="hidden text-xs text-inkSoft md:inline">{email}</span>
+          )}
+          {user && (
+            <Link href="/perfil" title="Seu avatar do sorteio" className="shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={user.imageUrl}
+                alt="Perfil"
+                width={28}
+                height={28}
+                className={`h-7 w-7 rounded-full border-2 object-cover ${
+                  active === "perfil" ? "border-stamp" : "border-line hover:border-ink"
+                }`}
+              />
+            </Link>
           )}
           <SignOutButton redirectUrl="/">
             <button type="button" className="btn-ghost px-3 py-2 text-xs sm:px-4 sm:text-sm">

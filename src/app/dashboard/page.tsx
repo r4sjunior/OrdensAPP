@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { getOrderStats } from "@/lib/stats";
+import { getMyCampaign } from "@/lib/tickets";
 import { todayISO } from "@/lib/dates";
 import NavBar from "@/components/NavBar";
 import OrderLogger from "@/components/OrderLogger";
@@ -14,7 +15,7 @@ export default async function DashboardPage() {
 
   const today = todayISO();
 
-  const [orders, stats] = await Promise.all([
+  const [orders, stats, campaign] = await Promise.all([
     prisma.order.findMany({
       where: {
         userId,
@@ -23,6 +24,7 @@ export default async function DashboardPage() {
       orderBy: { createdAt: "desc" },
     }),
     getOrderStats(userId),
+    getMyCampaign(userId),
   ]);
 
   return (
@@ -37,6 +39,7 @@ export default async function DashboardPage() {
             createdAt: o.createdAt.toISOString(),
           }))}
           initialStats={stats}
+          initialCampaign={campaign}
         />
       </main>
     </>

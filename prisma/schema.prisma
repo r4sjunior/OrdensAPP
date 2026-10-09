@@ -28,3 +28,27 @@ model Presence {
   @@index([lastSeen])
 }
 
+// Campanha "Caixinha de Gela": quantos tickets o usuário depositou como sorte
+// para o sorteio. Os tickets ganhos são calculados a partir de Order (ver lib/tickets.ts);
+// aqui fica só o total depositado, que não pode ser desfeito.
+model LuckDeposit {
+  userId    String   @id // Clerk user id
+  amount    Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+// Sorteio da roleta. O vencedor é sorteado no servidor ao apertar VALENDO e fica
+// gravado junto com a foto e o peso de cada participante naquele momento (auditoria).
+// Em `test` o sorteio só aparece no /adm, não na tela de todo mundo.
+model Draw {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  spinAt       DateTime // quando a roleta começa a girar (2 min depois do VALENDO)
+  test         Boolean   @default(false)
+  participants Json // [{ userId, name, imageUrl, luck, weight }]
+  winnerIndex  Int
+  closedAt     DateTime? // adm tirou o sorteio da tela de todos
+
+  @@index([closedAt])
+}
+

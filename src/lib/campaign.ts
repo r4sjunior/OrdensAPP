@@ -1,0 +1,29 @@
+// Campanha "Caixinha de Gela": de 01/11 a 20/12 cada ordem vale 1 ticket e o 1º lugar
+// do dia, da semana e do mês ganha tickets extras. O usuário escolhe quantos tickets
+// deposita como sorte no sorteio da confraternização.
+import { todayISO } from "./dates";
+
+// NEXT_PUBLIC_CAMPAIGN_START/END só existem para testar localmente antes de novembro;
+// em produção não defina e valem as datas abaixo.
+export const CAMPAIGN = {
+  name: "Caixinha de Gela",
+  start: process.env.NEXT_PUBLIC_CAMPAIGN_START || "2026-11-01", // inclusive
+  end: process.env.NEXT_PUBLIC_CAMPAIGN_END || "2026-12-20", // inclusive
+};
+
+// Tickets extras para o 1º lugar (empate: todos os empatados ganham).
+export const BONUS = { daily: 2, weekly: 7, monthly: 10 } as const;
+
+export type CampaignPhase = "before" | "active" | "ended";
+
+export function campaignPhase(iso: string = todayISO()): CampaignPhase {
+  if (iso < CAMPAIGN.start) return "before";
+  if (iso > CAMPAIGN.end) return "ended";
+  return "active";
+}
+
+// Peso na roleta: todo mundo tem 1; a sorte depositada aumenta a chance sem decidir
+// sozinha (raiz quadrada: 225 tickets = 16, não 226).
+export function luckWeight(deposited: number): number {
+  return 1 + Math.sqrt(Math.max(0, deposited));
+}

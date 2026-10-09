@@ -5,14 +5,19 @@
 // Sem isso, após as 21h no Brasil o UTC já está no dia seguinte.
 export const APP_TIME_ZONE = "America/Sao_Paulo";
 
-// Data de hoje (YYYY-MM-DD) no fuso de Brasília.
-export function todayISO(): string {
+// Dia (YYYY-MM-DD) de um instante no fuso de Brasília.
+export function isoInAppTZ(d: Date): string {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: APP_TIME_ZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).format(new Date());
+  }).format(d);
+}
+
+// Data de hoje (YYYY-MM-DD) no fuso de Brasília.
+export function todayISO(): string {
+  return isoInAppTZ(new Date());
 }
 
 // "Hoje" como Date à meia-noite UTC, no mesmo formato das datas salvas no banco.
