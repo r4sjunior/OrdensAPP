@@ -190,3 +190,36 @@ export const VICTORY_SONG: Song = {
   bass: [...VICTORY_BASS, ...VICTORY_BASS],
   sfx: [{ kind: "fizz", at: 0, dur: 1.2 }],
 };
+
+// Sirene do APOIO DROP: dois tons alternando (estilo alarme 8-bit) por `seconds`.
+// Devolve uma função para parar antes.
+export function siren(ctx: AudioContext, seconds: number): () => void {
+  const master = ctx.createGain();
+  master.gain.value = 0.5;
+  master.connect(ctx.destination);
+  const start = ctx.currentTime + 0.02;
+  const step = 0.35;
+  for (let i = 0; i * step < seconds; i++) {
+    const t = start + i * step;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(i % 2 ? 660 : 990, t);
+    gain.gain.setValueAtTime(0.12, t);
+    gain.gain.setValueAtTime(0, t + step * 0.9);
+    osc.connect(gain).connect(master);
+    osc.start(t);
+    osc.stop(t + step);
+  }
+  return () => master.disconnect();
+}
+
+// "Ajuda a caminho": arpejo curto subindo, de alívio (≈2s).
+export const HELP_ON_THE_WAY_SONG: Song = {
+  bpm: 180,
+  melody: [
+    ["C5", 0.5], ["E5", 0.5], ["G5", 0.5], ["C6", 1],
+    ["G5", 0.5], ["C6", 0.5], ["E6", 2],
+  ],
+  bass: [["C3", 2], ["G2", 1], ["C3", 2.5]],
+};

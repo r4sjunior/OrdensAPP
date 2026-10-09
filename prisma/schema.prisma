@@ -60,3 +60,31 @@ model Draw {
   @@index([closedAt])
 }
 
+// Aparelho que aceitou receber notificações push (alertas do APOIO DROP com o app fechado).
+model PushSubscription {
+  endpoint  String   @id
+  userId    String // Clerk user id
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Pedido de APOIO DROP: localização de quem pediu e quem atendeu.
+model HelpRequest {
+  id             String    @id @default(cuid())
+  userId         String // Clerk user id de quem pediu
+  name           String
+  imageUrl       String
+  lat            Float
+  lng            Float
+  accuracy       Float? // metros
+  createdAt      DateTime  @default(now())
+  acceptedAt     DateTime?
+  acceptedById   String?
+  acceptedByName String?
+  cancelledAt    DateTime?
+
+  @@index([createdAt])
+}

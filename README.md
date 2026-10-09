@@ -163,6 +163,23 @@ Campanha de 01/11 a 20/12 (datas em `src/lib/campaign.ts`).
 - Para testar a campanha antes de novembro, no `.env` local:
   `NEXT_PUBLIC_CAMPAIGN_START="2026-10-01"` (não coloque na Vercel).
 
+## APOIO DROP
+
+Funciona todos os dias das 07:40 às 20:00 (Brasília; `src/lib/apoioHours.ts`): fora disso
+o botão fica cinza e pedido aberto sem atendimento expira às 20:00.
+
+Botão vermelho fixo em todas as telas. Ao confirmar, o app pega a localização do GPS e
+todos os técnicos recebem o alerta: notificação push (toca mesmo com o app fechado /
+tela bloqueada) e, com o app aberto, tela vermelha com o nome piscando, sirene nos
+primeiros 30 s (depois só visual), botões Maps/Waze e **VOU AJUDAR**. Quem aceitar
+primeiro fica com o apoio e todos recebem "✅ AJUDA A CAMINHO" com o tempo que o
+pedido ficou aberto. Quem pediu pode cancelar. Tudo fica gravado na tabela `HelpRequest`.
+
+- Push precisa de `NEXT_PUBLIC_VAPID_PUBLIC_KEY` e `VAPID_PRIVATE_KEY` (Vercel).
+- Cada pessoa toca em **Ativar** no aviso do topo uma vez. No iPhone o push só funciona
+  com o app instalado (Compartilhar → Adicionar à Tela de Início, iOS 16.4+).
+- `public/sw.js` só recebe as notificações; não faz cache de nada.
+
 ## Extensões possíveis
 
 - Exportar o extrato em PDF/CSV

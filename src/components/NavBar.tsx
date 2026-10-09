@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { SignOutButton } from "@clerk/nextjs";
 import OnlineBadge from "./OnlineBadge";
 import LiveDraw from "./LiveDraw";
+import ApoioDrop from "./ApoioDrop";
 
 export default async function NavBar({ active }: { active: "dashboard" | "extrato" | "rose" | "perfil" }) {
   const user = await currentUser();
@@ -62,6 +63,7 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
         <div className="flex items-center gap-3 sm:gap-4">
           <OnlineBadge />
           <LiveDraw />
+          <ApoioDrop />
           {email && (
             <span className="hidden text-xs text-inkSoft md:inline">{email}</span>
           )}
