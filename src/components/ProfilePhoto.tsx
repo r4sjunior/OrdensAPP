@@ -50,7 +50,8 @@ export default function ProfilePhoto() {
     try {
       await user.setProfileImage({ file: await squareJpeg(file) });
       await user.reload();
-      setMessage({ ok: true, text: "Foto atualizada! Ela vai aparecer na sua fatia da roleta." });
+      await fetch("/api/profile/avatar", { method: "POST" });
+      setMessage({ ok: true, text: "Foto atualizada! Ela aparece nos rankings e na sua fatia da roleta." });
     } catch {
       setMessage({ ok: false, text: "Não foi possível trocar a foto. Tente outra imagem." });
     } finally {
@@ -62,8 +63,8 @@ export default function ProfilePhoto() {
     <div className="border border-line bg-paper p-6 text-center sm:p-10">
       <h1 className="font-display text-xl font-bold text-ink">Seu avatar</h1>
       <p className="mx-auto mt-1 max-w-sm text-sm text-inkSoft">
-        Essa foto aparece só na sua fatia da roleta do sorteio da Caixinha de Gela. Os rankings
-        continuam anônimos.
+        Essa foto aparece nos rankings e na sua fatia da roleta do sorteio da Caixinha de Gela.
+        Quem não adiciona foto aparece nos rankings com um ícone neutro.
       </p>
 
       <div className="mt-6 flex justify-center">

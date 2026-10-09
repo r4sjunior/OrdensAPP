@@ -37,6 +37,14 @@ model LuckDeposit {
   updatedAt DateTime @updatedAt
 }
 
+// Avatar que o usuário escolheu em /perfil. Só quem adicionou foto aparece com ela
+// nos rankings (quem não adicionou fica com um ícone neutro).
+model Profile {
+  userId    String   @id // Clerk user id
+  avatarUrl String
+  updatedAt DateTime @updatedAt
+}
+
 // Sorteio da roleta. O vencedor é sorteado no servidor ao apertar VALENDO e fica
 // gravado junto com a foto e o peso de cada participante naquele momento (auditoria).
 // Em `test` o sorteio só aparece no /adm, não na tela de todo mundo.

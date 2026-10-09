@@ -2,7 +2,35 @@
 
 import { useEffect, useState } from "react";
 
-type Entry = { position: number; orders: number; isMe: boolean };
+type Entry = { position: number; orders: number; isMe: boolean; avatarUrl: string | null };
+
+// Foto de quem adicionou avatar em /perfil; os outros ficam com um ícone neutro.
+function Avatar({ url, size, ring }: { url: string | null; size: number; ring?: string }) {
+  const style = { width: size, height: size, borderColor: ring };
+  if (!url) {
+    return (
+      <span
+        className="flex shrink-0 items-center justify-center rounded-full border-2 border-line bg-paperDim text-inkSoft"
+        style={style}
+        aria-hidden
+      >
+        <svg width={size * 0.55} height={size * 0.55} viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="8" r="4.5" />
+          <path d="M3.5 21a8.5 8.5 0 0 1 17 0Z" />
+        </svg>
+      </span>
+    );
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={url}
+      alt=""
+      className="shrink-0 rounded-full border-2 border-line object-cover"
+      style={style}
+    />
+  );
+}
 
 const TROPHY_COLOR: Record<number, string> = {
   1: "#D4A017", // ouro
@@ -45,9 +73,18 @@ function Podium({ entries }: { entries: Entry[] }) {
         const e = byPosition(p);
         return (
           <div key={p} className="flex w-24 flex-col items-center sm:w-28">
-            <div className={e ? "" : "opacity-25"}>
-              <Trophy color={TROPHY_COLOR[p]} size={p === 1 ? 48 : 38} />
-            </div>
+            {e ? (
+              <div className="relative">
+                <Avatar url={e.avatarUrl} size={p === 1 ? 56 : 44} ring={TROPHY_COLOR[p]} />
+                <span className="absolute -bottom-2 -right-3">
+                  <Trophy color={TROPHY_COLOR[p]} size={p === 1 ? 28 : 22} />
+                </span>
+              </div>
+            ) : (
+              <div className="opacity-25">
+                <Trophy color={TROPHY_COLOR[p]} size={p === 1 ? 48 : 38} />
+              </div>
+            )}
             <span
               className={`mt-1 font-mono text-xl font-semibold tabular-nums ${
                 e ? "text-ink" : "text-inkSoft"
@@ -134,6 +171,7 @@ export default function RankingList({
                 <span className="w-8 font-display text-lg font-bold text-stamp">
                   {e.position}º
                 </span>
+                <Avatar url={e.avatarUrl} size={32} />
                 {e.isMe && <span className="text-xs font-medium text-ink">Você</span>}
               </div>
               <span className="font-mono text-lg font-semibold tabular-nums text-ink">
