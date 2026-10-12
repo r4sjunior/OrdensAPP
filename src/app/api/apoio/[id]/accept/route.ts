@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { formatDuration, toHelpView, whoIs } from "@/lib/apoio";
 import { pushToAll } from "@/lib/push";
+import { publishApoio } from "@/lib/realtime";
 import { apoioWindow } from "@/lib/apoioHours";
 
 // POST /api/apoio/:id/accept -> "VOU AJUDAR". O primeiro que tocar fica com o apoio.
@@ -46,12 +47,15 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
   }
 
   // Mesma tag: substitui a notificação do pedido no celular de todo mundo.
+  await publishApoio({ type: "accepted", id: request.id });
   const waited = formatDuration(now.getTime() - request.createdAt.getTime());
   await pushToAll({
     title: "✅ AJUDA A CAMINHO!",
     body: `${helperName} vai apoiar ${request.name}. Ficou ${waited} em aberto.`,
     tag: `apoio-${request.id}`,
     url: "/dashboard",
+    kind: "apoio-accepted",
+    requestId: request.id,
   });
 
   return NextResponse.json(toHelpView(request, userId));

@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { listActiveHelp, toHelpView, whoIs } from "@/lib/apoio";
 import { pushToAll } from "@/lib/push";
+import { publishApoio } from "@/lib/realtime";
 import { APOIO_END, APOIO_START, apoioWindow } from "@/lib/apoioHours";
 
 export const dynamic = "force-dynamic";
@@ -51,6 +52,8 @@ export async function POST(req: NextRequest) {
     data: { userId, name, imageUrl, lat, lng, accuracy },
   });
 
+  // Telas abertas atualizam na hora; o push cobre quem está com o app fechado.
+  await publishApoio({ type: "created", id: created.id });
   await pushToAll(
     {
       title: "🆘 APOIO DROP",
@@ -58,6 +61,10 @@ export async function POST(req: NextRequest) {
       tag: `apoio-${created.id}`,
       url: "/dashboard",
       urgent: true,
+      kind: "apoio-created",
+      requestId: created.id,
+      lat,
+      lng,
     },
     userId
   );

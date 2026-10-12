@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { pushToAll } from "@/lib/push";
+import { publishApoio } from "@/lib/realtime";
 
 // POST /api/apoio/:id/cancel -> quem pediu cancela (resolveu sozinho, alarme falso).
 // O registro continua guardado.
@@ -19,6 +20,7 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
     return NextResponse.json({ error: "Pedido não está mais aberto." }, { status: 409 });
   }
 
+  await publishApoio({ type: "cancelled", id: params.id });
   const request = await prisma.helpRequest.findUnique({ where: { id: params.id } });
   await pushToAll(
     {
@@ -27,6 +29,8 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
       tag: `apoio-${params.id}`,
       url: "/dashboard",
       silent: true,
+      kind: "apoio-cancelled",
+      requestId: params.id,
     },
     userId
   );

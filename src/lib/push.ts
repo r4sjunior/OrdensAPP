@@ -10,6 +10,12 @@ export type PushPayload = {
   url: string; // onde abrir ao tocar
   urgent?: boolean; // fica na tela até a pessoa mexer
   silent?: boolean; // sem som/vibração (ex: pedido cancelado)
+  // Campos lidos pelo service worker (public/sw.js). Opcionais: aparelhos com o sw
+  // antigo simplesmente ignoram.
+  kind?: "apoio-created" | "apoio-accepted" | "apoio-cancelled";
+  requestId?: string;
+  lat?: number; // com lat/lng a notificação ganha o botão "Abrir no Maps"
+  lng?: number;
 };
 
 let configured = false;

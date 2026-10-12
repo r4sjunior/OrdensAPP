@@ -52,7 +52,7 @@ export async function ensurePushSubscription(ask: boolean): Promise<PushStatus> 
   }
   if (Notification.permission !== "granted") return "denied";
 
-  const registration = await navigator.serviceWorker.register("/sw.js");
+  const registration = await navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" });
   await navigator.serviceWorker.ready;
   const subscription =
     (await registration.pushManager.getSubscription()) ??

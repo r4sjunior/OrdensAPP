@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ptBR } from "@clerk/localizations";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -25,6 +26,8 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Ordens de Serviço",
   description: "Registro diário de ordens de serviço realizadas.",
+  applicationName: "Ordens OS",
+  formatDetection: { telephone: false },
   appleWebApp: {
     title: "Ordens OS",
     capable: true,
@@ -55,6 +58,7 @@ export default function RootLayout({
           className={`${display.variable} ${body.variable} ${mono.variable} font-body bg-paper text-ink antialiased`}
         >
           {children}
+          <ServiceWorkerRegister />
         </body>
       </html>
     </ClerkProvider>

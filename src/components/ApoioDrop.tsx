@@ -10,7 +10,8 @@ import { APOIO_END, APOIO_START, apoioWindow } from "@/lib/apoioHours";
 // em tela cheia para todos (sirene só nos primeiros 30s, depois só visual) e aviso
 // "ajuda a caminho" quando alguém aceita.
 
-const POLL_MS = 10_000;
+const POLL_MS = 10_000; // sem tempo real (stream fora do ar)
+const POLL_LIVE_MS = 60_000; // com tempo real: só uma conferência de segurança
 const SIREN_MS = 30_000;
 const JINGLE_WITHIN_MS = 60_000; // só toca "ajuda a caminho" se aceitou há pouco
 const SEEN_KEY = "apoio-drop:avisos-vistos";
@@ -98,6 +99,7 @@ export default function ApoioDrop() {
   const [error, setError] = useState<string | null>(null);
   const [push, setPush] = useState<PushStatus>("granted");
   const [promptLater, setPromptLater] = useState(true);
+  const [live, setLive] = useState(false); // stream de tempo real conectado
 
   const refresh = useCallback(async () => {
     try {
@@ -112,13 +114,54 @@ export default function ApoioDrop() {
     }
   }, []);
 
-  // Busca periódica + quando o app volta para a tela, chega um push ou a própria tela pede.
+  // Tempo real: o servidor avisa (SSE) assim que um pedido é criado/aceito/cancelado.
+  // Só fica conectado com o app na tela; em segundo plano quem avisa é o push.
+  useEffect(() => {
+    if (typeof EventSource === "undefined") return;
+    let source: EventSource | null = null;
+
+    const connect = () => {
+      if (source || document.visibilityState !== "visible") return;
+      source = new EventSource("/api/apoio/stream");
+      source.addEventListener("ready", () => {
+        setLive(true);
+        refresh(); // pega o que mudou enquanto estava desconectado
+      });
+      source.addEventListener("apoio", () => refresh());
+      source.onerror = () => {
+        setLive(false);
+        // CONNECTING = o navegador vai tentar de novo sozinho; CLOSED = servidor recusou
+        // (ex: 503), fica na busca periódica até a próxima vez que o app voltar à tela.
+        if (source?.readyState === EventSource.CLOSED) source = null;
+      };
+    };
+    const disconnect = () => {
+      source?.close();
+      source = null;
+      setLive(false);
+    };
+    const onVisibility = () => (document.visibilityState === "visible" ? connect() : disconnect());
+
+    connect();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      disconnect();
+    };
+  }, [refresh]);
+
+  // Busca periódica (rede de segurança) + quando o app volta para a tela, chega um push
+  // ou a própria tela pede.
+  useEffect(() => {
+    const poll = setInterval(() => {
+      if (document.visibilityState === "visible") refresh();
+    }, live ? POLL_LIVE_MS : POLL_MS);
+    return () => clearInterval(poll);
+  }, [refresh, live]);
+
   useEffect(() => {
     refresh();
     setSeen(readSeen());
-    const poll = setInterval(() => {
-      if (document.visibilityState === "visible") refresh();
-    }, POLL_MS);
     const onVisible = () => document.visibilityState === "visible" && refresh();
     const onSwMessage = (e: MessageEvent) => e.data?.type === "apoio" && refresh();
     document.addEventListener("visibilitychange", onVisible);
@@ -128,7 +171,6 @@ export default function ApoioDrop() {
     const unlock = () => unlockAudio();
     window.addEventListener("pointerdown", unlock);
     return () => {
-      clearInterval(poll);
       document.removeEventListener("visibilitychange", onVisible);
       window.removeEventListener(APOIO_REFRESH_EVENT, refresh);
       navigator.serviceWorker?.removeEventListener("message", onSwMessage);
@@ -210,8 +252,10 @@ export default function ApoioDrop() {
   async function accept(r: HelpView) {
     if (!window.confirm(`Vai apoiar ${r.name}? Todo mundo vai ser avisado que a ajuda está a caminho.`)) return;
     stopSiren(r.id);
-    const res = await fetch(`/api/apoio/${r.id}/accept`, { method: "POST" });
-    if (!res.ok) {
+    const res = await fetch(`/api/apoio/${r.id}/accept`, { method: "POST" }).catch(() => null);
+    if (!res) {
+      window.alert("Sem internet: não foi possível aceitar o pedido. Tente de novo.");
+    } else if (!res.ok) {
       const body = await res.json().catch(() => null);
       window.alert(body?.error ?? "Não foi possível aceitar o pedido.");
     }
@@ -220,7 +264,8 @@ export default function ApoioDrop() {
 
   async function cancelMine(r: HelpView) {
     if (!window.confirm("Cancelar seu pedido de apoio?")) return;
-    await fetch(`/api/apoio/${r.id}/cancel`, { method: "POST" });
+    const res = await fetch(`/api/apoio/${r.id}/cancel`, { method: "POST" }).catch(() => null);
+    if (!res) window.alert("Sem internet: não foi possível cancelar. Tente de novo.");
     refresh();
   }
 
@@ -241,15 +286,22 @@ export default function ApoioDrop() {
       return;
     }
     setModal("sending");
-    const res = await fetch("/api/apoio", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-        accuracy: position.coords.accuracy,
-      }),
-    });
+    let res: Response;
+    try {
+      res = await fetch("/api/apoio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+        }),
+      });
+    } catch {
+      setError("Sem internet: o pedido não foi enviado. Ligue os dados móveis ou procure sinal e tente de novo.");
+      setModal("confirm");
+      return;
+    }
     if (!res.ok) {
       const body = await res.json().catch(() => null);
       setError(body?.error ?? "Não foi possível enviar o pedido.");
