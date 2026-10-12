@@ -3,7 +3,7 @@
 //
 // - Só contam ordens com data dentro da campanha e registradas no próprio dia
 //   (data da ordem = dia do createdAt em Brasília): registro retroativo não vale.
-// - Bônus do 1º lugar só entra quando o período fecha (dia, semana sáb–sex ou mês,
+// - Bônus do 1º lugar só entra quando o período fecha (dia, semana dom–sáb ou mês,
 //   cortados no fim da campanha). Empate: todos os empatados ganham.
 import { prisma } from "./prisma";
 import { BONUS, CAMPAIGN, campaignPhase, luckWeight, type CampaignPhase } from "./campaign";

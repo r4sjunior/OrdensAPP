@@ -9,7 +9,7 @@ import {
 import { today } from "@/lib/dates";
 
 // GET /api/orders/ranking?type=daily&date=YYYY-MM-DD           -> top 3 do dia de `date`
-// GET /api/orders/ranking?type=weekly&date=YYYY-MM-DD          -> top 3 da semana (sáb–sex) de `date`
+// GET /api/orders/ranking?type=weekly&date=YYYY-MM-DD          -> top 3 da semana (dom–sáb) de `date`
 // GET /api/orders/ranking?type=monthly&date=YYYY-MM-DD[&top=3] -> ranking do mês de `date`
 // GET /api/orders/ranking?type=general                         -> todos os usuários, desde o início
 // Retorna só posição e nº de ordens (nunca ids nem e-mails).

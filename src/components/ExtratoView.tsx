@@ -319,7 +319,7 @@ export default function ExtratoView() {
           type="weekly"
           date={date}
           title="Ranking semanal"
-          subtitle="Top 3 da semana selecionada (sáb–sex) · zera todo sábado às 0:00"
+          subtitle="Top 3 da semana selecionada (dom–sáb) · zera todo domingo às 0:00"
         />
       )}
       {period === "monthly" && (

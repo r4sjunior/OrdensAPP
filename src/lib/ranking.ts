@@ -43,7 +43,7 @@ export function getDailyRanking(currentUserId: string, reference: Date) {
   return countByUser(currentUserId, { date: { gte: day, lte: day } }, 3);
 }
 
-// Top 3 da semana (sábado a sexta) que contém `reference`.
+// Top 3 da semana (domingo a sábado) que contém `reference`.
 export function getWeeklyRanking(currentUserId: string, reference: Date) {
   return countByUser(
     currentUserId,

@@ -1,5 +1,5 @@
 // Helpers de data usados para montar os extratos (diário, semanal, mensal).
-// Semana vai de sábado a sexta-feira: o ranking semanal zera todo sábado às 0:00.
+// Semana vai de domingo a sábado: o ranking semanal zera todo domingo às 0:00.
 
 // Fuso usado para decidir qual é "hoje" (e, portanto, a virada do dia/mês).
 // Sem isso, após as 21h no Brasil o UTC já está no dia seguinte.
@@ -36,10 +36,9 @@ export function startOfDay(d: Date): Date {
 
 export function startOfWeek(d: Date): Date {
   const day = d.getUTCDay(); // 0 = domingo, 6 = sábado
-  const diff = -((day + 1) % 7); // volta até o sábado
-  const saturday = new Date(d);
-  saturday.setUTCDate(d.getUTCDate() + diff);
-  return startOfDay(saturday);
+  const sunday = new Date(d);
+  sunday.setUTCDate(d.getUTCDate() - day); // volta até o domingo
+  return startOfDay(sunday);
 }
 
 export function endOfWeek(d: Date): Date {
@@ -67,7 +66,7 @@ export function formatBR(d: Date): string {
   return d.toLocaleDateString("pt-BR", { timeZone: "UTC" });
 }
 
-export const WEEKDAY_LABELS_PT = ["Sáb", "Dom", "Seg", "Ter", "Qua", "Qui", "Sex"];
+export const WEEKDAY_LABELS_PT = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 export const MONTH_LABELS_PT = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
