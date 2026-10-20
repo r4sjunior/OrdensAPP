@@ -49,7 +49,7 @@ export default function MonthlyHistory({
   const previous = months?.filter((m) => m.month < currentMonth) ?? null;
 
   return (
-    <div className="mt-6 border border-line bg-paper p-4 sm:p-8">
+    <div className="mt-6 card p-4 sm:p-8">
       <h2 className="font-display text-lg font-bold text-ink">Meses anteriores</h2>
       <p className="mb-4 text-xs text-inkSoft">Fechamento de ordens de cada mês</p>
 

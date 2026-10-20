@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { listActiveHelp, toHelpView, whoIs } from "@/lib/apoio";
 import { pushToAll } from "@/lib/push";
+import { reverseGeocode } from "@/lib/geocode";
 import { publishApoio } from "@/lib/realtime";
 import { APOIO_END, APOIO_START, apoioWindow } from "@/lib/apoioHours";
 
@@ -47,17 +48,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Você já tem um pedido de apoio aberto." }, { status: 409 });
   }
 
-  const { name, imageUrl } = await whoIs(userId);
+  const [{ name, imageUrl }, place] = await Promise.all([whoIs(userId), reverseGeocode(lat, lng)]);
   const created = await prisma.helpRequest.create({
-    data: { userId, name, imageUrl, lat, lng, accuracy },
+    data: { userId, name, imageUrl, lat, lng, accuracy, ...place },
   });
+  const where = [place.bairro, place.address].filter(Boolean).join(" · ");
 
   // Telas abertas atualizam na hora; o push cobre quem está com o app fechado.
   await publishApoio({ type: "created", id: created.id });
   await pushToAll(
     {
-      title: "🆘 APOIO DROP",
-      body: `${name} pediu apoio! Toque para ver a localização.`,
+      title: place.bairro ? `🆘 SOS DROP · ${place.bairro.toUpperCase()}` : "🆘 SOS DROP",
+      body: where ? `${name} pediu apoio!\n📍 ${where}` : `${name} pediu apoio! Toque para ver a localização.`,
+      image: `/api/apoio/${created.id}/card`,
       tag: `apoio-${created.id}`,
       url: "/dashboard",
       urgent: true,

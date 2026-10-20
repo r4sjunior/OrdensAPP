@@ -9,13 +9,13 @@
 // Ao mudar a estratégia de cache, troque VERSION: os caches antigos são apagados
 // (só os deste app — nada que o usuário salvou fica no cache).
 
-const VERSION = "v2";
+const VERSION = "v3";
 const STATIC_CACHE = `ordens-static-${VERSION}`;
 const PAGES_CACHE = `ordens-pages-${VERSION}`;
 const OFFLINE_URL = "/offline.html";
 const MAX_PAGES = 15;
 
-const PRECACHE = [OFFLINE_URL, "/icon-192", "/icon-512", "/manifest.webmanifest"];
+const PRECACHE = [OFFLINE_URL, "/icon-192", "/icon-512", "/badge-sos", "/manifest.webmanifest"];
 // Páginas que não devem ficar guardadas no aparelho.
 const NO_CACHE_PAGES = [/^\/adm/, /^\/sign-/];
 
@@ -49,7 +49,7 @@ self.addEventListener("activate", (event) => {
 function isStaticAsset(url) {
   return (
     url.pathname.startsWith("/_next/static/") ||
-    /^\/(icon(-\d+|-maskable)?|apple-icon)$/.test(url.pathname) ||
+    /^\/(icon(-\d+|-maskable)?|apple-icon|badge-sos)$/.test(url.pathname) ||
     /^\/rose-\d+\.png$/.test(url.pathname) ||
     url.pathname === "/manifest.webmanifest"
   );
@@ -131,6 +131,9 @@ function notifyOpenWindows(message) {
     .then((clients) => clients.forEach((c) => c.postMessage(message)));
 }
 
+// Vibração longa e insistente para o SOS (o Android toca o som de notificação junto).
+const SOS_VIBRATE = [800, 250, 800, 250, 800, 250, 800, 250, 1200];
+
 self.addEventListener("push", (event) => {
   let data = {};
   try {
@@ -147,13 +150,14 @@ self.addEventListener("push", (event) => {
     silent: !!data.silent,
     requireInteraction: !!data.urgent,
     icon: "/icon-192",
-    badge: "/icon-192",
-    vibrate: data.silent ? undefined : data.urgent ? [600, 200, 600, 200, 600, 200, 600] : [200, 100, 200],
+    badge: "/badge-sos",
+    image: data.image || undefined,
+    vibrate: data.silent ? undefined : data.urgent ? SOS_VIBRATE : [200, 100, 200],
     timestamp: Date.now(),
     actions: hasLocation
       ? [
           { action: "maps", title: "📍 Abrir no Maps" },
-          { action: "open", title: "Abrir o app" },
+          { action: "open", title: "🙋 Ver e ajudar" },
         ]
       : [],
     data: {
@@ -168,7 +172,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     Promise.all([
       self.registration.showNotification(data.title || "Ordens", options),
-      // Se o app estiver aberto, avisa a tela para atualizar na hora.
+      // Se o app estiver aberto (mesmo em segundo plano), avisa a aba para atualizar e
+      // tocar a sirene.
       notifyOpenWindows({ type: "apoio", kind: options.data.kind, requestId: options.data.requestId }),
     ])
   );

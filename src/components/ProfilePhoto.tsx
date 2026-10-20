@@ -60,7 +60,7 @@ export default function ProfilePhoto() {
   }
 
   return (
-    <div className="border border-line bg-paper p-6 text-center sm:p-10">
+    <div className="card p-6 text-center sm:p-10">
       <h1 className="font-display text-xl font-bold text-ink">Seu avatar</h1>
       <p className="mx-auto mt-1 max-w-sm text-sm text-inkSoft">
         Essa foto aparece nos rankings e na sua fatia da roleta do sorteio da Caixinha de Gela.
@@ -73,7 +73,7 @@ export default function ProfilePhoto() {
           <img
             src={user.imageUrl}
             alt="Sua foto de perfil"
-            className="h-36 w-36 rounded-full border-4 border-stamp object-cover"
+            className="h-36 w-36 animate-pop-in rounded-full object-cover shadow-lift ring-4 ring-stamp ring-offset-4 ring-offset-white"
           />
         ) : (
           <div className="h-36 w-36 animate-pulse rounded-full border-4 border-line bg-paperDim" />

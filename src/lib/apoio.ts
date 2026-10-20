@@ -13,6 +13,9 @@ export type HelpView = {
   lat: number;
   lng: number;
   accuracy: number | null;
+  address: string | null;
+  bairro: string | null;
+  city: string | null;
   createdAt: number; // epoch ms
   acceptedAt: number | null;
   acceptedByName: string | null;
@@ -29,6 +32,9 @@ type HelpRow = {
   lat: number;
   lng: number;
   accuracy: number | null;
+  address: string | null;
+  bairro: string | null;
+  city: string | null;
   createdAt: Date;
   acceptedAt: Date | null;
   acceptedById: string | null;
@@ -44,6 +50,9 @@ export function toHelpView(r: HelpRow, viewerId: string): HelpView {
     lat: r.lat,
     lng: r.lng,
     accuracy: r.accuracy,
+    address: r.address,
+    bairro: r.bairro,
+    city: r.city,
     createdAt: r.createdAt.getTime(),
     acceptedAt: r.acceptedAt?.getTime() ?? null,
     acceptedByName: r.acceptedByName,

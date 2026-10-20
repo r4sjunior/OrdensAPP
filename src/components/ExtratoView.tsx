@@ -164,15 +164,15 @@ export default function ExtratoView() {
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap gap-2 sm:mb-8">
+      <div className="mb-6 inline-flex flex-wrap gap-1 rounded-2xl bg-white/70 p-1 shadow-soft ring-1 ring-black/5 sm:mb-8">
         {(["daily", "weekly", "monthly"] as Period[]).map((p) => (
           <button
             key={p}
             onClick={() => setPeriod(p)}
-            className={`px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:py-2 sm:text-sm ${
+            className={`rounded-xl px-3 py-1.5 text-xs font-medium transition sm:px-4 sm:py-2 sm:text-sm ${
               period === p
-                ? "border-2 border-stamp text-stamp"
-                : "border border-line text-inkSoft hover:text-ink"
+                ? "bg-gradient-to-br from-stamp to-stampDark text-white shadow-md shadow-stamp/30"
+                : "text-inkSoft hover:bg-white hover:text-ink"
             }`}
           >
             {PERIOD_LABEL[p]}
@@ -180,7 +180,7 @@ export default function ExtratoView() {
         ))}
       </div>
 
-      <div className="border border-line bg-paper p-4 sm:p-8">
+      <div className="card p-4 sm:p-8">
         <div className="mb-6 flex items-center justify-between">
           <button
             onClick={() => setDate((d) => shiftDate(d, period, -1))}

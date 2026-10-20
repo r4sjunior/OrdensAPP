@@ -12,13 +12,18 @@ export type PushPayload = {
   silent?: boolean; // sem som/vibração (ex: pedido cancelado)
   // Campos lidos pelo service worker (public/sw.js). Opcionais: aparelhos com o sw
   // antigo simplesmente ignoram.
-  kind?: "apoio-created" | "apoio-accepted" | "apoio-cancelled";
+  kind?: "apoio-created" | "apoio-accepted" | "apoio-cancelled" | "apoio-test";
   requestId?: string;
   lat?: number; // com lat/lng a notificação ganha o botão "Abrir no Maps"
   lng?: number;
+  image?: string; // imagem grande (cartão vermelho do SOS) na notificação do Android
 };
 
 let configured = false;
+
+export function pushConfigured(): boolean {
+  return configure();
+}
 
 function configure(): boolean {
   if (configured) return true;
@@ -32,14 +37,23 @@ function configure(): boolean {
 }
 
 // Envia para todos os aparelhos inscritos (menos os de `exceptUserId`). Inscrições
-// que o navegador já invalidou (404/410) são removidas.
-export async function pushToAll(payload: PushPayload, exceptUserId?: string) {
-  if (!configure()) return;
-  const subs = await prisma.pushSubscription.findMany({
-    where: exceptUserId ? { userId: { not: exceptUserId } } : {},
-  });
+// que o navegador já invalidou (404/410) são removidas. Devolve quantos aparelhos
+// receberam.
+export async function pushToAll(payload: PushPayload, exceptUserId?: string): Promise<number> {
+  return send(payload, exceptUserId ? { userId: { not: exceptUserId } } : {});
+}
+
+// Só os aparelhos de um usuário (botão "Testar alerta" do /perfil).
+export async function pushToUser(payload: PushPayload, userId: string): Promise<number> {
+  return send(payload, { userId });
+}
+
+async function send(payload: PushPayload, where: { userId?: string | { not: string } }): Promise<number> {
+  if (!configure()) return 0;
+  const subs = await prisma.pushSubscription.findMany({ where });
   const body = JSON.stringify(payload);
   const dead: string[] = [];
+  let delivered = 0;
 
   await Promise.allSettled(
     subs.map((s) =>
@@ -47,6 +61,9 @@ export async function pushToAll(payload: PushPayload, exceptUserId?: string) {
         .sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, body, {
           TTL: 60 * 30,
           urgency: "high",
+        })
+        .then(() => {
+          delivered++;
         })
         .catch((err: { statusCode?: number }) => {
           if (err?.statusCode === 404 || err?.statusCode === 410) dead.push(s.endpoint);
@@ -57,4 +74,5 @@ export async function pushToAll(payload: PushPayload, exceptUserId?: string) {
   if (dead.length > 0) {
     await prisma.pushSubscription.deleteMany({ where: { endpoint: { in: dead } } });
   }
+  return delivered;
 }

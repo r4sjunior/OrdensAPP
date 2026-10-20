@@ -8,8 +8,26 @@
     height: 100%;
   }
 
+  body {
+    background-color: theme("colors.paper");
+    background-image:
+      radial-gradient(60rem 30rem at 110% -10%, rgb(217 85 44 / 0.10), transparent 60%),
+      radial-gradient(50rem 28rem at -20% 0%, rgb(47 110 98 / 0.08), transparent 60%);
+    background-attachment: fixed;
+  }
+
   ::selection {
-    background: #c1502e33;
+    background: #d9552c33;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -24,24 +42,33 @@
     );
   }
 
+  /* Cartão padrão das telas: branco, cantos arredondados e sombra suave. */
+  .card {
+    @apply rounded-3xl bg-white/90 shadow-soft ring-1 ring-black/5;
+  }
+
   .btn-stamp {
-    @apply inline-flex items-center justify-center gap-2 rounded-sm border-2 border-stamp px-6 py-3 font-display font-bold uppercase tracking-wide text-stamp transition-colors hover:bg-stamp hover:text-paper active:scale-[0.98] disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-stamp to-stampDark px-6 py-3.5 font-display font-bold uppercase tracking-wide text-white shadow-lg shadow-stamp/30 transition hover:shadow-xl hover:shadow-stamp/40 hover:brightness-110 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none;
+  }
+
+  .btn-sos {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-red-500 to-red-700 px-4 font-display font-bold uppercase tracking-wide text-white shadow-lg shadow-red-600/30 transition hover:brightness-110 active:scale-[0.98] disabled:opacity-60;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-sm border border-line px-4 py-2 font-body text-sm text-inkSoft transition-colors hover:border-ink hover:text-ink;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-white/70 px-4 py-2 font-body text-sm text-inkSoft ring-1 ring-line transition hover:bg-white hover:text-ink hover:ring-ink/30;
   }
 
   /* Rose (Help Rose) */
   .field {
-    @apply w-full rounded-sm border border-line bg-white/60 px-3 py-2 text-ink outline-none transition-colors placeholder:text-inkSoft/60 focus:border-ink;
+    @apply w-full rounded-xl border border-line bg-white/70 px-3 py-2 text-ink outline-none transition placeholder:text-inkSoft/60 focus:border-stamp focus:ring-2 focus:ring-stamp/20;
   }
 
   .chip {
-    @apply shrink-0 rounded-full border border-line px-3 py-1 text-xs text-inkSoft transition-colors hover:border-ink hover:text-ink;
+    @apply shrink-0 rounded-full bg-white/70 px-3 py-1 text-xs text-inkSoft ring-1 ring-line transition hover:text-ink hover:ring-ink/30;
   }
 
   .chip-on {
-    @apply border-ink bg-ink text-paper hover:text-paper;
+    @apply bg-ink text-paper ring-ink hover:text-paper;
   }
 }

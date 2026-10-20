@@ -10,9 +10,9 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4 py-10 sm:px-6">
-      <div className="w-full max-w-sm border border-line bg-paper p-6 sm:p-10">
+      <div className="card w-full max-w-sm animate-slide-up p-6 sm:p-10">
         <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border-2 border-stamp font-display text-lg font-bold text-stamp">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-stamp to-stampDark font-display text-lg font-bold text-white shadow-lg shadow-stamp/30">
             OS
           </div>
           <div>
@@ -31,7 +31,7 @@ export default async function Home() {
         <SignInButton mode="modal" forceRedirectUrl="/dashboard">
           <button
             type="button"
-            className="flex w-full items-center justify-center gap-3 border-2 border-ink px-5 py-3 font-body text-sm font-medium text-ink transition-colors hover:bg-ink hover:text-paper"
+            className="flex w-full items-center justify-center gap-3 rounded-2xl bg-white px-5 py-3.5 font-body text-sm font-medium text-ink shadow-soft ring-1 ring-line transition hover:shadow-lift active:scale-[0.98]"
           >
             <GoogleIcon />
             Entrar com Google

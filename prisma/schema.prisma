@@ -80,6 +80,9 @@ model HelpRequest {
   lat            Float
   lng            Float
   accuracy       Float? // metros
+  address        String? // rua e número (geocodificação reversa; pode faltar)
+  bairro         String? // bairro/região, destacado no alerta
+  city           String?
   createdAt      DateTime  @default(now())
   acceptedAt     DateTime?
   acceptedById   String?

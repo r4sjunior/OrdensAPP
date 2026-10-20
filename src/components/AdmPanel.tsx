@@ -158,7 +158,7 @@ export default function AdmPanel({
         {error && <p className="mt-3 text-sm text-stamp">{error}</p>}
       </section>
 
-      <section className="mt-6 border border-line bg-paper p-4 sm:p-6">
+      <section className="mt-6 card p-4 sm:p-6">
         <h2 className="font-display text-lg font-bold text-ink">Na roda</h2>
         <p className="mb-4 text-xs text-inkSoft">
           {participants.length} cadastrados · {totalLuck} de sorte depositada · peso = 1 + √sorte
@@ -183,7 +183,7 @@ export default function AdmPanel({
       </section>
 
       {history.length > 0 && (
-        <section className="mt-6 border border-line bg-paper p-4 sm:p-6">
+        <section className="mt-6 card p-4 sm:p-6">
           <h2 className="mb-4 font-display text-lg font-bold text-ink">Histórico</h2>
           <ul className="divide-y divide-line border-y border-line">
             {history.map((h) => (

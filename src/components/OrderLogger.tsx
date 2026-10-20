@@ -121,7 +121,7 @@ export default function OrderLogger({
     <div>
       <CampaignCard initial={initialCampaign} refreshKey={campaignKey} />
 
-      <div className="mb-8 flex flex-col items-center gap-5 border border-line bg-paper px-4 py-8 text-center sm:mb-10 sm:gap-6 sm:px-8 sm:py-10">
+      <div className="card mb-8 flex flex-col items-center gap-5 px-4 py-8 text-center sm:mb-10 sm:gap-6 sm:px-8 sm:py-10">
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
@@ -155,7 +155,10 @@ export default function OrderLogger({
         </div>
 
         <div>
-          <div className="font-mono text-5xl font-semibold tabular-nums text-ink sm:text-6xl">
+          <div
+            key={orders.length}
+            className="animate-pop-in bg-gradient-to-br from-ink to-inkSoft bg-clip-text font-mono text-6xl font-semibold tabular-nums text-transparent sm:text-7xl"
+          >
             {orders.length}
           </div>
           <p className="mt-1 text-xs uppercase tracking-wide text-inkSoft">
@@ -167,7 +170,7 @@ export default function OrderLogger({
           type="button"
           onClick={handleRegister}
           disabled={isPending || lockedPastDay}
-          className="btn-stamp w-full disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="btn-stamp w-full py-4 text-lg disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-10"
         >
           + Registrar ordem
         </button>
@@ -180,7 +183,7 @@ export default function OrderLogger({
 
         {error && <p className="text-sm text-stamp">{error}</p>}
 
-        <div className="grid w-full grid-cols-3 gap-2 border-t border-line pt-5 sm:gap-4 sm:pt-6">
+        <div className="grid w-full grid-cols-3 gap-2 pt-1 sm:gap-4 [&>div]:rounded-2xl [&>div]:bg-paper [&>div]:px-1 [&>div]:py-3 [&>div]:ring-1 [&>div]:ring-black/5">
           <div>
             <div className="font-mono text-lg font-semibold tabular-nums text-ink sm:text-2xl">
               {formatAverage(stats.average)}
@@ -209,7 +212,7 @@ export default function OrderLogger({
       </div>
 
       {orders.length > 0 && (
-        <div className="border border-line">
+        <div className="card animate-fade-in overflow-hidden">
           <div className="border-b border-line px-4 py-3 text-xs uppercase tracking-wide text-inkSoft sm:px-5">
             Registros de {formatDateBR(date)}
           </div>

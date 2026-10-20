@@ -10,18 +10,21 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
   const email = user?.primaryEmailAddress?.emailAddress;
 
   return (
-    <header className="border-b border-line">
-      <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4 sm:px-6 sm:py-5">
+    // O desfoque fica numa camada à parte: backdrop-filter no próprio header prenderia
+    // os alertas `fixed` (SOS, sorteio) dentro dele.
+    <header className="sticky top-0 z-[60] border-b border-black/5 shadow-[0_1px_12px_rgb(26_35_38/0.05)]">
+      <div className="absolute inset-0 -z-10 bg-white/70 backdrop-blur-xl" aria-hidden />
+      <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
         <div className="flex items-center gap-4 sm:gap-8">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border-2 border-stamp font-display text-xs font-bold text-stamp max-[379px]:hidden">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-stamp to-stampDark font-display text-xs font-bold text-white shadow-md shadow-stamp/30 max-[379px]:hidden">
             OS
           </div>
-          <nav className="flex items-center gap-3 text-sm sm:gap-6">
+          <nav className="flex items-center gap-1 text-sm sm:gap-2 [&>a]:rounded-xl [&>a]:px-2 [&>a]:py-1.5 [&>a]:transition sm:[&>a]:px-3">
             <Link
               href="/rose"
               className={`flex items-center gap-1.5 whitespace-nowrap ${
                 active === "rose"
-                  ? "font-medium text-stamp"
+                  ? "bg-stamp/10 font-medium text-stamp"
                   : "text-inkSoft hover:text-stamp"
               }`}
             >
@@ -41,7 +44,7 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
               href="/dashboard"
               className={
                 active === "dashboard"
-                  ? "font-medium text-ink"
+                  ? "bg-ink font-medium text-white shadow-sm"
                   : "text-inkSoft hover:text-ink"
               }
             >
@@ -51,7 +54,7 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
               href="/extrato"
               className={
                 active === "extrato"
-                  ? "font-medium text-ink"
+                  ? "bg-ink font-medium text-white shadow-sm"
                   : "text-inkSoft hover:text-ink"
               }
             >

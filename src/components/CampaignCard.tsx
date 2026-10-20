@@ -74,13 +74,13 @@ export default function CampaignCard({
   const previewWeight = luckWeight(data.effective + amount);
 
   return (
-    <div className="mb-8 border-2 border-amber-500 bg-amber-50/60 sm:mb-10">
+    <div className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-amber-50 to-amber-100/70 shadow-soft ring-1 ring-amber-400/50 sm:mb-10">
       <CampaignIntro open={introOpen} onOpenChange={setIntroOpen} />
 
       <button
         type="button"
         onClick={() => setIntroOpen(true)}
-        className="flex w-full items-center gap-3 border-b border-amber-500/40 px-4 py-3 text-left sm:px-6"
+        className="flex w-full items-center gap-3 border-b border-amber-500/20 px-4 py-3 text-left sm:px-6"
       >
         <span className="text-3xl" aria-hidden>
           🍺

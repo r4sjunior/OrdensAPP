@@ -30,7 +30,7 @@ export default function AdmLogin({ configured }: { configured: boolean }) {
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
-      <form onSubmit={submit} className="w-full max-w-sm border border-line bg-paper p-6 sm:p-8">
+      <form onSubmit={submit} className="w-full max-w-sm card p-6 sm:p-8">
         <p className="text-3xl" aria-hidden>
           🍺
         </p>
