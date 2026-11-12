@@ -565,7 +565,7 @@ export default function ApoioDrop() {
         <button
           type="button"
           onClick={() => window.alert(`O APOIO DROP funciona todos os dias das ${APOIO_START} às ${APOIO_END}.`)}
-          className="fixed bottom-4 right-4 z-[65] rounded-2xl bg-white/80 px-4 py-2 text-left font-display text-xs font-bold uppercase leading-tight tracking-wide text-inkSoft shadow-lg ring-1 ring-black/5 backdrop-blur"
+          className="fixed bottom-[calc(1rem+var(--statusbar-h,0px))] right-4 z-[65] rounded-2xl bg-white/80 px-4 py-2 text-left font-display text-xs font-bold uppercase leading-tight tracking-wide text-inkSoft shadow-lg ring-1 ring-black/5 backdrop-blur"
         >
           🆘 SOS Drop
           <span className="block font-body text-[10px] font-normal normal-case tracking-normal">
@@ -580,7 +580,7 @@ export default function ApoioDrop() {
             setError(null);
             setModal("confirm");
           }}
-          className="group fixed bottom-4 right-4 z-[65] flex items-center gap-2 rounded-full bg-gradient-to-br from-red-500 to-red-700 py-3 pl-3 pr-5 font-display text-sm font-bold uppercase tracking-wide text-white shadow-xl shadow-red-600/40 transition active:scale-95"
+          className="group fixed bottom-[calc(1rem+var(--statusbar-h,0px))] right-4 z-[65] flex items-center gap-2 rounded-full bg-gradient-to-br from-red-500 to-red-700 py-3 pl-3 pr-5 font-display text-sm font-bold uppercase tracking-wide text-white shadow-xl shadow-red-600/40 transition active:scale-95"
         >
           <span className="relative flex h-7 w-7 items-center justify-center rounded-full bg-white/20">
             <span className="absolute inset-0 animate-ping rounded-full bg-white/30" aria-hidden />

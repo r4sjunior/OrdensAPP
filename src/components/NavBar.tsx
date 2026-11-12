@@ -4,6 +4,7 @@ import { SignOutButton } from "@clerk/nextjs";
 import OnlineBadge from "./OnlineBadge";
 import LiveDraw from "./LiveDraw";
 import ApoioDrop from "./ApoioDrop";
+import StatusBar from "./StatusBar";
 
 export default async function NavBar({ active }: { active: "dashboard" | "extrato" | "rose" | "perfil" }) {
   const user = await currentUser();
@@ -91,6 +92,7 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
           </SignOutButton>
         </div>
       </div>
+      <StatusBar />
     </header>
   );
 }

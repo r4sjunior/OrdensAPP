@@ -572,20 +572,20 @@
       "plantao",
       "folga",
       "scala",
-      "escala outubro",
-      "escala do mes de outubro"
+      "escala novembro",
+      "escala do mes de novembro"
     ],
-    "content": "Escala de outubro/2026 — técnicos em manutenção de assinantes.",
+    "content": "Escala de novembro/2026 — técnicos em manutenção de assinantes.",
     "media": [
       {
         "type": "file",
-        "src": "/kb/escala-out-2026.xlsx",
-        "name": "ESCALA_DOS_TÉCNICO_EM_MANUTENÇÃO_DE_ASSINANTES_OUTUBRO_26.xlsx"
+        "src": "/kb/escala-nov-2026.xlsx",
+        "name": "ESCALA_DOS_TÉCNICO_EM_MANUTENÇÃO_DE_ASSINANTES_NOVEMBRO_26.xlsx"
       }
     ],
     "sensitive": false,
     "hits": 1,
     "source": "rose",
-    "updatedAt": "2026-10-05T21:42:18.278Z"
+    "updatedAt": "2026-11-12T00:00:00.000Z"
   }
 ]
