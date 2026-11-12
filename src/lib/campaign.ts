@@ -1,4 +1,4 @@
-// Campanha "Caixinha de Gela": de 01/11 a 20/12 cada ordem vale 1 ticket e o 1º lugar
+// Campanha "Caixinha de Gela": de 01/11 a 11/12 cada ordem vale 1 ticket e o 1º lugar
 // do dia, da semana e do mês ganha tickets extras. O usuário escolhe quantos tickets
 // deposita como sorte no sorteio da confraternização.
 import { todayISO } from "./dates";
@@ -8,7 +8,7 @@ import { todayISO } from "./dates";
 export const CAMPAIGN = {
   name: "Caixinha de Gela",
   start: process.env.NEXT_PUBLIC_CAMPAIGN_START || "2026-11-01", // inclusive
-  end: process.env.NEXT_PUBLIC_CAMPAIGN_END || "2026-12-20", // inclusive
+  end: process.env.NEXT_PUBLIC_CAMPAIGN_END || "2026-12-11", // inclusive — dia da confraternização (antes era 20/12)
 };
 
 // Tickets extras para o 1º lugar (empate: todos os empatados ganham).

@@ -146,13 +146,13 @@ links da equipe técnica. Quem está logado com o Google vê tudo.
 
 ## Sorteio da Caixinha de Gela
 
-Campanha de 01/11 a 20/12 (datas em `src/lib/campaign.ts`).
+Campanha de 01/11 a 11/12 (datas em `src/lib/campaign.ts`).
 
 - **Tickets** (`src/lib/tickets.ts`): 1 por ordem registrada no próprio dia; 1º lugar do
   dia +2, da semana (sáb–sex) +7, do mês +10 (empate: todos ganham). Calculados a partir
   das ordens — nada guardado à parte. Durante a campanha só dá para registrar ordens de hoje.
 - **Sorte**: no Registrar, cada um escolhe quantos tickets depositar (não dá para desfazer;
-  só entre 01/11 e 20/12). Peso na roleta = 1 + √sorte. Todo cadastrado entra, mesmo com 0.
+  só entre 01/11 e 11/12). Peso na roleta = 1 + √sorte. Todo cadastrado entra, mesmo com 0.
 - **Chamada**: animação 8-bit que abre sozinha uma vez por aparelho e reabre no card.
 - **Avatar**: `/perfil` troca a foto (fica no Clerk). Só aparece na roleta.
 - **`/adm`**: login próprio (`ADM_USER` / `ADM_PASSWORD` nas variáveis de ambiente).

@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (!Number.isInteger(amount) || amount <= 0) {
     return NextResponse.json({ error: "Quantidade inválida" }, { status: 400 });
   }
-  // Tickets só podem ser usados durante a campanha (01/11 a 20/12).
+  // Tickets só podem ser usados durante a campanha (01/11 a 11/12).
   const phase = campaignPhase();
   if (phase === "before") {
     return NextResponse.json({ error: "A campanha ainda não começou." }, { status: 400 });
