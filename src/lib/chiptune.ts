@@ -170,6 +170,39 @@ export const CHAMADA_SONG: Song = {
   ],
 };
 
+// Vinheta de Natal (01/12): refrão de "Jingle Bells" (melodia tradicional, domínio
+// público) em 8-bit. 8 compassos a 160 bpm = 12s. Batidas das partes da árvore
+// encaixando em 1,5s / 3s / 4,5s e o brilho da estrela em 9s.
+export const NATAL_SONG: Song = {
+  bpm: 160,
+  melody: [
+    ["E5", 1], ["E5", 1], ["E5", 2],
+    ["E5", 1], ["E5", 1], ["E5", 2],
+    ["E5", 1], ["G5", 1], ["C5", 1.5], ["D5", 0.5],
+    ["E5", 4],
+    ["F5", 1], ["F5", 1], ["F5", 1.5], ["F5", 0.5],
+    ["F5", 1], ["E5", 1], ["E5", 1], ["E5", 0.5], ["E5", 0.5],
+    ["G5", 1], ["G5", 1], ["F5", 1], ["D5", 1],
+    ["C5", 1], ["E5", 0.5], ["G5", 0.5], ["C6", 2],
+  ],
+  bass: [
+    ["C3", 1], ["G2", 1], ["C3", 1], ["G2", 1],
+    ["C3", 1], ["G2", 1], ["C3", 1], ["G2", 1],
+    ["C3", 1], ["G2", 1], ["C3", 1], ["G2", 1],
+    ["C3", 1], ["E3", 1], ["G3", 1], ["E3", 1],
+    ["F2", 1], ["C3", 1], ["F2", 1], ["C3", 1],
+    ["C3", 1], ["G2", 1], ["C3", 1], ["G2", 1],
+    ["G2", 1], ["D3", 1], ["G2", 1], ["B2", 1],
+    ["C3", 1], ["G2", 1], ["C3", 2],
+  ],
+  sfx: [
+    { kind: "slide", at: 1.5, from: 220, to: 60, dur: 0.15 },
+    { kind: "slide", at: 3.0, from: 220, to: 60, dur: 0.15 },
+    { kind: "slide", at: 4.5, from: 220, to: 60, dur: 0.15 },
+    { kind: "slide", at: 9.0, from: 700, to: 2600, dur: 0.5 },
+  ],
+};
+
 // Fanfarra do vencedor (original): 2 voltas de 4 compassos a 160 bpm ≈ 12s.
 const VICTORY_MELODY: Note[] = [
   ["G4", 0.5], ["C5", 0.5], ["E5", 0.5], ["G5", 1], ["E5", 0.5], ["G5", 1],

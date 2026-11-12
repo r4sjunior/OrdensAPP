@@ -140,6 +140,7 @@ export async function getAllTickets(today: string = todayISO()) {
 
 export type MyCampaign = {
   phase: CampaignPhase;
+  today: string; // dia no fuso de Brasília (decide qual vídeo aparece)
   start: string;
   end: string;
   bonus: typeof BONUS;
@@ -162,6 +163,7 @@ export async function getMyCampaign(userId: string): Promise<MyCampaign> {
   const effective = Math.min(deposited, tickets.earned);
   return {
     phase: campaignPhase(today),
+    today,
     start: CAMPAIGN.start,
     end: CAMPAIGN.end,
     bonus: BONUS,

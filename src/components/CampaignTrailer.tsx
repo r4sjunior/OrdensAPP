@@ -16,7 +16,7 @@ const FPS = 12;
 const PANEL_AT = 10.5; // segundos até aparecer o quadro com as regras
 
 // Paleta estilo PICO-8.
-const C = {
+export const C = {
   black: "#000000",
   navy: "#1D2B53",
   purple: "#7E2553",
@@ -49,13 +49,13 @@ const TECH_TOP = [
   "T..URURU...",
   "T.RRRRRRR..",
 ];
-const TECH_FRAMES = [
+export const TECH_FRAMES = [
   [...TECH_TOP, "T..PR.RP...", "G..PP.PP...", "...PP.PP...", "..BBB.BBB.."],
   [...TECH_TOP, "T..PR.RP...", "G..PP.PP...", "...PP.BBB..", "..BBB......"],
 ];
 
 // Caixa de cerveja (14×9): Y tampinha · A garrafa · N madeira · R faixa · W letreiro.
-const CRATE = [
+export const CRATE = [
   "..Y..Y..Y..Y..",
   "..A..A..A..A..",
   "NNNNNNNNNNNNNN",
@@ -68,9 +68,9 @@ const CRATE = [
 ];
 const CRATE_PALETTE: Record<string, string> = { Y: C.yellow, A: C.brown, N: C.brown, R: C.red, W: C.white };
 
-type Rect = { x: number; y: number; w?: number; h?: number; c: string };
+export type Rect = { x: number; y: number; w?: number; h?: number; c: string };
 
-function Pixels({ rects }: { rects: Rect[] }) {
+export function Pixels({ rects }: { rects: Rect[] }) {
   return (
     <>
       {rects.map((r, i) => (
@@ -91,7 +91,7 @@ function spriteRects(rows: string[], palette: Record<string, string>): Rect[] {
   return out;
 }
 
-function Sprite({ rows, palette, x, y }: { rows: string[]; palette: Record<string, string>; x: number; y: number }) {
+export function Sprite({ rows, palette, x, y }: { rows: string[]; palette: Record<string, string>; x: number; y: number }) {
   const rects = useMemo(() => spriteRects(rows, palette), [rows, palette]);
   return (
     <g transform={`translate(${Math.round(x)} ${Math.round(y)})`}>
@@ -101,7 +101,7 @@ function Sprite({ rows, palette, x, y }: { rows: string[]; palette: Record<strin
 }
 
 // Linha de pixels (Bresenham), para escada, fios e talabarte.
-function pixelLine(x0: number, y0: number, x1: number, y1: number, c: string): Rect[] {
+export function pixelLine(x0: number, y0: number, x1: number, y1: number, c: string): Rect[] {
   x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
   const out: Rect[] = [];
   const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0);
@@ -122,9 +122,9 @@ const LADDER_TOP = 44;
 // x do trilho esquerdo da escada na altura y (encostada no poste).
 const lx = (y: number) => 44 + ((GROUND - y) * 16) / (GROUND - LADDER_TOP);
 
-const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
-const lerp = (a: number, b: number, p: number) => a + (b - a) * clamp01(p);
-const prog = (t: number, from: number, to: number) => clamp01((t - from) / (to - from));
+export const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
+export const lerp = (a: number, b: number, p: number) => a + (b - a) * clamp01(p);
+export const prog = (t: number, from: number, to: number) => clamp01((t - from) / (to - from));
 
 function staticScene(): Rect[] {
   const r: Rect[] = [];
@@ -184,7 +184,7 @@ function winner(t: number): Actor {
 }
 
 // Mesmo técnico, capacetes de cores diferentes.
-const techPalette = (helmet: string) => ({
+export const techPalette = (helmet: string) => ({
   H: helmet, L: C.yellow, S: C.peach, K: C.black, U: C.lblue, R: C.red, P: C.dgray, B: C.black, T: C.yellow, G: C.lgray,
 });
 const PALETTES = [techPalette(C.white), techPalette(C.yellow), techPalette("#00E436")];

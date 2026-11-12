@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { MyCampaign } from "@/lib/tickets";
-import { luckWeight } from "@/lib/campaign";
+import { luckWeight, promoFor } from "@/lib/campaign";
 import CampaignIntro from "./CampaignIntro";
 
 function formatDay(iso: string) {
@@ -71,19 +71,22 @@ export default function CampaignCard({
   }
 
   const { tickets, bonus } = data;
+  // Até 30/11 a chamada; em 01/12 a vinheta de Natal; depois nenhum vídeo.
+  const promo = promoFor(data.today);
   const previewWeight = luckWeight(data.effective + amount);
 
   return (
     <div className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-amber-50 to-amber-100/70 shadow-soft ring-1 ring-amber-400/50 sm:mb-10">
-      <CampaignIntro open={introOpen} onOpenChange={setIntroOpen} />
+      {promo && <CampaignIntro key={promo} kind={promo} open={introOpen} onOpenChange={setIntroOpen} />}
 
       <button
         type="button"
-        onClick={() => setIntroOpen(true)}
-        className="flex w-full items-center gap-3 border-b border-amber-500/20 px-4 py-3 text-left sm:px-6"
+        onClick={() => promo && setIntroOpen(true)}
+        disabled={!promo}
+        className="flex w-full items-center gap-3 border-b border-amber-500/20 px-4 py-3 text-left disabled:cursor-default sm:px-6"
       >
         <span className="text-3xl" aria-hidden>
-          🍺
+          {promo === "natal" ? "🎄" : "🍺"}
         </span>
         <div className="min-w-0 flex-1">
           <p className="font-display text-base font-bold leading-tight text-ink sm:text-lg">
@@ -93,7 +96,8 @@ export default function CampaignCard({
             {formatDay(data.start)} a {formatDay(data.end)} · sorteio na confraternização
           </p>
         </div>
-        <span className="shrink-0 text-xs text-stamp underline">▶ ver chamada</span>
+        {promo === "chamada" && <span className="shrink-0 text-xs text-stamp underline">▶ ver chamada</span>}
+        {promo === "natal" && <span className="shrink-0 text-xs text-stamp underline">🎄 ver vinheta</span>}
       </button>
 
       <div className="px-4 py-5 sm:px-6">

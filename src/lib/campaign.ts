@@ -11,6 +11,20 @@ export const CAMPAIGN = {
   end: process.env.NEXT_PUBLIC_CAMPAIGN_END || "2026-12-11", // inclusive — dia da confraternização (antes era 20/12)
 };
 
+// Vídeos que abrem no card do sorteio:
+// - a chamada da campanha aparece até o fim de novembro (some em 01/12);
+// - a vinheta de Natal aparece só no dia 01/12.
+export const CHAMADA_UNTIL = "2026-11-30"; // inclusive
+export const NATAL_DAY = "2026-12-01";
+
+export type Promo = "chamada" | "natal";
+
+export function promoFor(iso: string = todayISO()): Promo | null {
+  if (iso === NATAL_DAY) return "natal";
+  if (iso <= CHAMADA_UNTIL) return "chamada";
+  return null;
+}
+
 // Tickets extras para o 1º lugar (empate: todos os empatados ganham).
 export const BONUS = { daily: 2, weekly: 7, monthly: 10 } as const;
 

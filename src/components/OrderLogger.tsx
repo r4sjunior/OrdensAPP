@@ -119,7 +119,10 @@ export default function OrderLogger({
 
   return (
     <div>
-      <CampaignCard initial={initialCampaign} refreshKey={campaignKey} />
+      {/* Depois do fim da campanha (a partir de 12/12) o card do sorteio some sozinho. */}
+      {initialCampaign.phase !== "ended" && (
+        <CampaignCard initial={initialCampaign} refreshKey={campaignKey} />
+      )}
 
       <div className="card mb-8 flex flex-col items-center gap-5 px-4 py-8 text-center sm:mb-10 sm:gap-6 sm:px-8 sm:py-10">
         <div className="flex items-center gap-2 sm:gap-3">
