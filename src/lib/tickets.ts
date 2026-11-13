@@ -5,14 +5,17 @@
 //   (data da ordem = dia do createdAt em Brasília): registro retroativo não vale.
 // - Bônus do 1º lugar só entra quando o período fecha (dia, semana dom–sáb ou mês,
 //   cortados no fim da campanha). Empate: todos os empatados ganham.
+// - No último dia a campanha fecha às 20h (CAMPAIGN_END_AT): OS registradas depois
+//   não contam e os períodos que terminam nesse dia fecham nessa hora.
 import { prisma } from "./prisma";
-import { BONUS, CAMPAIGN, campaignPhase, luckWeight, type CampaignPhase } from "./campaign";
+import { BONUS, CAMPAIGN, CAMPAIGN_END_AT, campaignPhase, luckWeight, type CampaignPhase } from "./campaign";
 import { addDays, endOfMonth, isoInAppTZ, startOfWeek, toISODate, todayISO } from "./dates";
 
 export type TicketOrder = {
   userId: string;
   date: string; // YYYY-MM-DD
   createdDay: string; // YYYY-MM-DD em Brasília
+  createdAt?: number; // instante do registro (ms), para o corte das 20h do último dia
 };
 
 export type TicketBreakdown = {
@@ -35,7 +38,7 @@ function minISO(a: string, b: string) {
 function awardFirstPlaces(
   counts: Map<string, Map<string, number>>, // dia -> usuário -> ordens
   periodOf: (day: string) => { key: string; end: string },
-  today: string,
+  isOpen: (end: string) => boolean,
   win: (userId: string) => void
 ) {
   const periods = new Map<string, { end: string; totals: Map<string, number> }>();
@@ -47,7 +50,7 @@ function awardFirstPlaces(
   });
 
   periods.forEach(({ end, totals }) => {
-    if (end >= today) return; // período ainda aberto
+    if (isOpen(end)) return; // período ainda aberto
     const max = Math.max(0, ...Array.from(totals.values()));
     if (max === 0) return;
     totals.forEach((n, userId) => {
@@ -57,7 +60,14 @@ function awardFirstPlaces(
 }
 
 // Parte pura (sem banco), para dar para testar com dados de exemplo.
-export function computeTickets(orders: TicketOrder[], today: string): Map<string, TicketBreakdown> {
+export function computeTickets(
+  orders: TicketOrder[],
+  today: string,
+  now: number = Date.now()
+): Map<string, TicketBreakdown> {
+  const campaignClosed = now >= CAMPAIGN_END_AT;
+  // Período fecha na virada do dia seguinte; o que termina no último dia fecha às 20h.
+  const isOpen = (end: string) => (end === CAMPAIGN.end && campaignClosed ? false : end >= today);
   const result = new Map<string, TicketBreakdown>();
   const get = (userId: string) => {
     let b = result.get(userId);
@@ -72,13 +82,14 @@ export function computeTickets(orders: TicketOrder[], today: string): Map<string
   for (const o of orders) {
     if (o.date < CAMPAIGN.start || o.date > CAMPAIGN.end || o.date > today) continue;
     if (o.createdDay !== o.date) continue;
+    if (o.createdAt !== undefined && o.createdAt >= CAMPAIGN_END_AT) continue; // depois das 20h do último dia
     const byUser = counts.get(o.date) ?? new Map<string, number>();
     byUser.set(o.userId, (byUser.get(o.userId) ?? 0) + 1);
     counts.set(o.date, byUser);
     get(o.userId).orders += 1;
   }
 
-  awardFirstPlaces(counts, (day) => ({ key: day, end: day }), today, (u) => {
+  awardFirstPlaces(counts, (day) => ({ key: day, end: day }), isOpen, (u) => {
     get(u).dailyWins += 1;
   });
 
@@ -89,7 +100,7 @@ export function computeTickets(orders: TicketOrder[], today: string): Map<string
       const key = toISODate(start);
       return { key, end: minISO(toISODate(addDays(start, 6)), CAMPAIGN.end) };
     },
-    today,
+    isOpen,
     (u) => {
       get(u).weeklyWins += 1;
     }
@@ -101,7 +112,7 @@ export function computeTickets(orders: TicketOrder[], today: string): Map<string
       key: day.slice(0, 7),
       end: minISO(toISODate(endOfMonth(new Date(`${day}T00:00:00.000Z`))), CAMPAIGN.end),
     }),
-    today,
+    isOpen,
     (u) => {
       get(u).monthlyWins += 1;
     }
@@ -133,6 +144,7 @@ export async function getAllTickets(today: string = todayISO()) {
       userId: o.userId,
       date: toISODate(o.date),
       createdDay: isoInAppTZ(o.createdAt),
+      createdAt: o.createdAt.getTime(),
     })),
     today
   );

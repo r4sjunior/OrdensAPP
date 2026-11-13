@@ -93,7 +93,7 @@ export default function CampaignCard({
             Sorteio da Caixinha de Gela
           </p>
           <p className="text-xs text-inkSoft">
-            {formatDay(data.start)} a {formatDay(data.end)} · sorteio na confraternização
+            {formatDay(data.start)} a {formatDay(data.end)} às 20h · sorteio na confraternização
           </p>
         </div>
         {promo === "chamada" && <span className="shrink-0 text-xs text-stamp underline">▶ ver chamada</span>}

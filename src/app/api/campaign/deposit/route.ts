@@ -17,13 +17,20 @@ export async function POST(req: NextRequest) {
   if (!Number.isInteger(amount) || amount <= 0) {
     return NextResponse.json({ error: "Quantidade inválida" }, { status: 400 });
   }
-  // Tickets só podem ser usados durante a campanha (01/11 a 11/12).
+  // Tickets só podem ser usados durante a campanha (01/11 a 11/12; no último dia o
+  // depósito fica aberto até 23h59, depois do fechamento dos tickets às 20h).
   const phase = campaignPhase();
   if (phase === "before") {
     return NextResponse.json({ error: "A campanha ainda não começou." }, { status: 400 });
   }
   if (phase === "ended") {
     return NextResponse.json({ error: "Os depósitos de sorte já encerraram." }, { status: 400 });
+  }
+
+  // Depois do VALENDO o vencedor já foi sorteado: depósito novo não mudaria nada.
+  const realDraw = await prisma.draw.findFirst({ where: { test: false }, select: { id: true } });
+  if (realDraw) {
+    return NextResponse.json({ error: "O sorteio já foi feito. Depósitos encerrados." }, { status: 400 });
   }
 
   const { tickets } = await getMyCampaign(userId);

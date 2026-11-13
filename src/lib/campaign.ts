@@ -1,4 +1,4 @@
-// Campanha "Caixinha de Gela": de 01/11 a 11/12 cada ordem vale 1 ticket e o 1º lugar
+// Campanha "Caixinha de Gela": de 01/11 a 11/12 às 20h cada ordem vale 1 ticket e o 1º lugar
 // do dia, da semana e do mês ganha tickets extras. O usuário escolhe quantos tickets
 // deposita como sorte no sorteio da confraternização.
 import { todayISO } from "./dates";
@@ -9,7 +9,13 @@ export const CAMPAIGN = {
   name: "Caixinha de Gela",
   start: process.env.NEXT_PUBLIC_CAMPAIGN_START || "2026-11-01", // inclusive
   end: process.env.NEXT_PUBLIC_CAMPAIGN_END || "2026-12-11", // inclusive — dia da confraternização (antes era 20/12)
+  endTime: "20:00", // horário de Brasília em que os tickets param de contar no último dia
 };
+
+// Instante exato do encerramento (Brasília é UTC-3 o ano todo, sem horário de verão).
+// Às 20h: OS registradas depois não valem ticket e os bônus finais (1º do dia, da
+// semana e do mês) entram na hora. Depositar sorte continua liberado até o fim do dia.
+export const CAMPAIGN_END_AT = new Date(`${CAMPAIGN.end}T${CAMPAIGN.endTime}:00-03:00`).getTime();
 
 // Vídeos que abrem no card do sorteio:
 // - a chamada da campanha aparece até o fim de novembro (some em 01/12);

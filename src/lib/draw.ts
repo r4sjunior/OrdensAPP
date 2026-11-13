@@ -34,16 +34,19 @@ async function listAllUsers() {
   return users;
 }
 
-// Todos os usuários cadastrados no Clerk, com tickets e sorte (inclusive quem tem 0).
+// Entram na roleta só as contas que já registraram pelo menos uma OS no app (contas
+// de teste ou que nunca usaram ficam de fora), com tickets e sorte (inclusive quem tem 0).
 export async function getParticipants(): Promise<Participant[]> {
-  const [users, tickets, deposits] = await Promise.all([
+  const [users, tickets, deposits, withOrders] = await Promise.all([
     listAllUsers(),
     getAllTickets(),
     prisma.luckDeposit.findMany(),
+    prisma.order.findMany({ distinct: ["userId"], select: { userId: true } }),
   ]);
   const deposited = new Map(deposits.map((d) => [d.userId, d.amount]));
+  const registered = new Set(withOrders.map((o) => o.userId));
 
-  return users.map((u) => {
+  return users.filter((u) => registered.has(u.id)).map((u) => {
     const earned = tickets.get(u.id)?.earned ?? 0;
     const luck = Math.min(deposited.get(u.id) ?? 0, earned);
     const name =
@@ -67,7 +70,7 @@ export function pickWeighted(weights: number[]): number {
 
 export async function createDraw(test: boolean) {
   const participants = await getParticipants();
-  if (participants.length === 0) throw new Error("Nenhum usuário cadastrado.");
+  if (participants.length === 0) throw new Error("Ninguém registrou ordens ainda.");
   const winnerIndex = pickWeighted(participants.map((p) => p.weight));
   return prisma.draw.create({
     data: {

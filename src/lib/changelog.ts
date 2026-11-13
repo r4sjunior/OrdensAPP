@@ -7,6 +7,8 @@ export type Update = {
 };
 
 export const UPDATES: Update[] = [
+  { date: "2026-11-12", text: "Caixinha de Gela: tickets valem até 11/12 às 20h; dá para depositar sorte até o fim do dia" },
+  { date: "2026-11-12", text: "Na roleta do sorteio entra quem registrou OS no app" },
   { date: "2026-11-12", text: "Caixinha de Gela: a campanha agora termina em 11/12, dia da confraternização (antes era 20/12)" },
   { date: "2026-11-12", text: "Escala de novembro disponível na Help Rose" },
   { date: "2026-11-12", text: "Nova barra de atualizações no rodapé do app" },
