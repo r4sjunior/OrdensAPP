@@ -2,7 +2,8 @@
 // guardado à parte, então apagar uma ordem também tira o ticket dela).
 //
 // - Só contam ordens com data dentro da campanha e registradas no próprio dia
-//   (data da ordem = dia do createdAt em Brasília): registro retroativo não vale.
+//   (data da ordem = dia do createdAt em Brasília): registro retroativo não vale,
+//   exceto os dias que o adm liberou (Order.late, ver src/lib/lateEntries.ts).
 // - Bônus do 1º lugar só entra quando o período fecha (dia, semana dom–sáb ou mês,
 //   cortados no fim da campanha). Empate: todos os empatados ganham.
 // - No último dia a campanha fecha às 20h (CAMPAIGN_END_AT): OS registradas depois
@@ -16,6 +17,7 @@ export type TicketOrder = {
   date: string; // YYYY-MM-DD
   createdDay: string; // YYYY-MM-DD em Brasília
   createdAt?: number; // instante do registro (ms), para o corte das 20h do último dia
+  late?: boolean; // lançamento atrasado liberado pelo adm: conta como do próprio dia
 };
 
 export type TicketBreakdown = {
@@ -81,7 +83,7 @@ export function computeTickets(
   const counts = new Map<string, Map<string, number>>();
   for (const o of orders) {
     if (o.date < CAMPAIGN.start || o.date > CAMPAIGN.end || o.date > today) continue;
-    if (o.createdDay !== o.date) continue;
+    if (o.createdDay !== o.date && !o.late) continue;
     if (o.createdAt !== undefined && o.createdAt >= CAMPAIGN_END_AT) continue; // depois das 20h do último dia
     const byUser = counts.get(o.date) ?? new Map<string, number>();
     byUser.set(o.userId, (byUser.get(o.userId) ?? 0) + 1);
@@ -137,7 +139,7 @@ export async function getAllTickets(today: string = todayISO()) {
         lte: new Date(`${CAMPAIGN.end}T00:00:00.000Z`),
       },
     },
-    select: { userId: true, date: true, createdAt: true },
+    select: { userId: true, date: true, createdAt: true, late: true },
   });
   return computeTickets(
     orders.map((o) => ({
@@ -145,6 +147,7 @@ export async function getAllTickets(today: string = todayISO()) {
       date: toISODate(o.date),
       createdDay: isoInAppTZ(o.createdAt),
       createdAt: o.createdAt.getTime(),
+      late: o.late,
     })),
     today
   );

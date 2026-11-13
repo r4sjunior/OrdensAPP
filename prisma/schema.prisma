@@ -15,6 +15,7 @@ model Order {
   userId    String // Clerk user id (ex: "user_2abc...")
   date      DateTime @db.Date // dia em que a ordem foi realizada (sem hora)
   createdAt DateTime @default(now())
+  late      Boolean  @default(false) // lançamento atrasado liberado pelo adm (conta como do dia)
 
   @@index([userId, date])
 }

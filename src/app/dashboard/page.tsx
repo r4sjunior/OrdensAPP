@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { getOrderStats } from "@/lib/stats";
 import { getMyCampaign } from "@/lib/tickets";
 import { todayISO } from "@/lib/dates";
+import { lateDatesFor } from "@/lib/lateEntries";
 import NavBar from "@/components/NavBar";
 import OrderLogger from "@/components/OrderLogger";
 
@@ -15,7 +16,7 @@ export default async function DashboardPage() {
 
   const today = todayISO();
 
-  const [orders, stats, campaign] = await Promise.all([
+  const [orders, stats, campaign, user] = await Promise.all([
     prisma.order.findMany({
       where: {
         userId,
@@ -25,7 +26,10 @@ export default async function DashboardPage() {
     }),
     getOrderStats(userId),
     getMyCampaign(userId),
+    currentUser(),
   ]);
+  // Dias passados que o adm liberou para este técnico lançar (só durante a campanha).
+  const lateDates = lateDatesFor(user?.primaryEmailAddress?.emailAddress);
 
   return (
     <>
@@ -40,6 +44,7 @@ export default async function DashboardPage() {
           }))}
           initialStats={stats}
           initialCampaign={campaign}
+          lateDates={lateDates}
         />
       </main>
     </>

@@ -36,11 +36,13 @@ export default function OrderLogger({
   initialOrders,
   initialStats,
   initialCampaign,
+  lateDates = [],
 }: {
   initialDate: string;
   initialOrders: Order[];
   initialStats: Stats;
   initialCampaign: MyCampaign;
+  lateDates?: string[]; // dias passados liberados pelo adm para este técnico
 }) {
   const [date, setDate] = useState(initialDate);
   const [orders, setOrders] = useState<Order[]>(initialOrders);
@@ -115,7 +117,9 @@ export default function OrderLogger({
 
   const isToday = date === todayISO();
   // Durante a campanha os pódios valem tickets, então só dá para registrar no dia.
-  const lockedPastDay = !isToday && campaignPhase() === "active";
+  // Exceção: dias que o adm liberou para lançamento atrasado.
+  const releasedDay = !isToday && lateDates.includes(date);
+  const lockedPastDay = !isToday && campaignPhase() === "active" && !releasedDay;
 
   return (
     <div>
@@ -177,6 +181,12 @@ export default function OrderLogger({
         >
           + Registrar ordem
         </button>
+
+        {releasedDay && campaignPhase() === "active" && (
+          <p className="-mt-2 text-xs text-emerald-700">
+            ✅ Lançamento liberado pelo adm para este dia.
+          </p>
+        )}
 
         {lockedPastDay && (
           <p className="-mt-2 text-xs text-inkSoft">
