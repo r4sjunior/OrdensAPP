@@ -7,11 +7,11 @@ export type Update = {
 };
 
 export const UPDATES: Update[] = [
+  { date: "2026-11-12", text: "Escala de novembro disponível na Help Rose" },
   { date: "2026-11-12", text: "Troque sua foto no Perfil (toque no seu avatar no topo): ela aparece nos rankings e na roleta do sorteio" },
   { date: "2026-11-12", text: "Caixinha de Gela: tickets valem até 11/12 às 20h; dá para depositar sorte até o fim do dia" },
   { date: "2026-11-12", text: "Na roleta do sorteio entra só quem registrou OS durante a campanha" },
   { date: "2026-11-12", text: "Caixinha de Gela: a campanha agora termina em 11/12, dia da confraternização (antes era 20/12)" },
-  { date: "2026-11-12", text: "Escala de novembro disponível na Help Rose" },
   { date: "2026-11-12", text: "Nova barra de atualizações no rodapé do app" },
   { date: "2026-10-19", text: "Melhorias no APOIO DROP e nas notificações" },
   { date: "2026-10-12", text: "Correção no reset semanal do ranking" },
