@@ -28,13 +28,18 @@ export default function OnlineBadge() {
       }
     }
 
+    // Push do sorteio com o app aberto: pergunta na hora em vez de esperar o próximo sinal.
+    const onSwMessage = (e: MessageEvent) => e.data?.type === "sorteio" && ping();
+
     ping();
     const interval = setInterval(ping, HEARTBEAT_MS);
     document.addEventListener("visibilitychange", ping);
+    navigator.serviceWorker?.addEventListener("message", onSwMessage);
     return () => {
       cancelled = true;
       clearInterval(interval);
       document.removeEventListener("visibilitychange", ping);
+      navigator.serviceWorker?.removeEventListener("message", onSwMessage);
     };
   }, []);
 

@@ -12,11 +12,12 @@ export type PushPayload = {
   silent?: boolean; // sem som/vibração (ex: pedido cancelado)
   // Campos lidos pelo service worker (public/sw.js). Opcionais: aparelhos com o sw
   // antigo simplesmente ignoram.
-  kind?: "apoio-created" | "apoio-accepted" | "apoio-cancelled" | "apoio-test";
+  kind?: "apoio-created" | "apoio-accepted" | "apoio-cancelled" | "apoio-test" | "sorteio";
   requestId?: string;
   lat?: number; // com lat/lng a notificação ganha o botão "Abrir no Maps"
   lng?: number;
   image?: string; // imagem grande (cartão vermelho do SOS) na notificação do Android
+  badge?: string; // ícone pequeno da barra de status (padrão: /badge-sos)
 };
 
 let configured = false;

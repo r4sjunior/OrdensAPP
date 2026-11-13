@@ -43,6 +43,7 @@ export default function AdmPanel({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showOpen, setShowOpen] = useState(true);
+  const [pushNotice, setPushNotice] = useState<string | null>(null);
   const live = useDrawView(openDraw?.id ?? null);
 
   const totalWeight = participants.reduce((sum, p) => sum + p.weight, 0);
@@ -66,6 +67,14 @@ export default function AdmPanel({
       setError(body?.error ?? "Não foi possível começar o sorteio.");
       return;
     }
+    const created = await res.json().catch(() => null);
+    setPushNotice(
+      test
+        ? null
+        : created?.pushed > 0
+          ? `Aviso enviado para ${created.pushed} ${created.pushed === 1 ? "celular" : "celulares"}.`
+          : "Nenhum celular recebeu o aviso (ninguém ativou as notificações)."
+    );
     setShowOpen(true);
     router.refresh();
   }
@@ -121,6 +130,7 @@ export default function AdmPanel({
             <p className="text-sm text-ink">
               {openDraw.test ? "Sorteio de teste em andamento." : "Sorteio na tela de todo mundo."}
             </p>
+            {pushNotice && !openDraw.test && <p className="mt-1 text-xs text-inkSoft">🔔 {pushNotice}</p>}
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <button type="button" onClick={() => setShowOpen(true)} className="btn-stamp flex-1">
                 Abrir roleta

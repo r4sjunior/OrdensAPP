@@ -49,7 +49,7 @@ self.addEventListener("activate", (event) => {
 function isStaticAsset(url) {
   return (
     url.pathname.startsWith("/_next/static/") ||
-    /^\/(icon(-\d+|-maskable)?|apple-icon|badge-sos)$/.test(url.pathname) ||
+    /^\/(icon(-\d+|-maskable)?|apple-icon|badge-sos|badge-gela)$/.test(url.pathname) ||
     /^\/rose-\d+\.png$/.test(url.pathname) ||
     url.pathname === "/manifest.webmanifest"
   );
@@ -150,7 +150,7 @@ self.addEventListener("push", (event) => {
     silent: !!data.silent,
     requireInteraction: !!data.urgent,
     icon: "/icon-192",
-    badge: "/badge-sos",
+    badge: data.badge || "/badge-sos",
     image: data.image || undefined,
     vibrate: data.silent ? undefined : data.urgent ? SOS_VIBRATE : [200, 100, 200],
     timestamp: Date.now(),
@@ -172,9 +172,13 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     Promise.all([
       self.registration.showNotification(data.title || "Ordens", options),
-      // Se o app estiver aberto (mesmo em segundo plano), avisa a aba para atualizar e
-      // tocar a sirene.
-      notifyOpenWindows({ type: "apoio", kind: options.data.kind, requestId: options.data.requestId }),
+      // Se o app estiver aberto (mesmo em segundo plano), avisa a aba: no SOS para
+      // atualizar e tocar a sirene; no sorteio para abrir a roleta na hora.
+      notifyOpenWindows(
+        options.data.kind === "sorteio"
+          ? { type: "sorteio" }
+          : { type: "apoio", kind: options.data.kind, requestId: options.data.requestId }
+      ),
     ])
   );
 });
@@ -195,7 +199,9 @@ self.addEventListener("notificationclick", (event) => {
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
       for (const c of clients) {
         if ("focus" in c) {
-          c.postMessage({ type: "apoio", kind: data.kind, requestId: data.requestId });
+          c.postMessage(
+            data.kind === "sorteio" ? { type: "sorteio" } : { type: "apoio", kind: data.kind, requestId: data.requestId }
+          );
           return c.focus();
         }
       }
