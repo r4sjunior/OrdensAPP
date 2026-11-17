@@ -7,6 +7,7 @@ export type Update = {
 };
 
 export const UPDATES: Update[] = [
+  { date: "2026-11-17", text: "Novo mapa da equipe: toque no logo OS no topo e veja qual técnico está mais perto (07:40 às 20:00)" },
   { date: "2026-11-12", text: "Escala de novembro disponível na Help Rose" },
   { date: "2026-11-12", text: "Troque sua foto no Perfil (toque no seu avatar no topo): ela aparece nos rankings e na roleta do sorteio" },
   { date: "2026-11-12", text: "Caixinha de Gela: tickets valem até 11/12 às 20h; dá para depositar sorte até o fim do dia" },

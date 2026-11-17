@@ -92,3 +92,17 @@ model HelpRequest {
 
   @@index([createdAt])
 }
+
+// Última localização de cada técnico para o mapa da equipe (/mapa). Só é gravada e
+// mostrada no horário do SOS DROP (07:40–20:00); fora disso a API recusa e o mapa fica vazio.
+model UserLocation {
+  userId    String   @id // Clerk user id
+  name      String
+  imageUrl  String
+  lat       Float
+  lng       Float
+  accuracy  Float? // metros
+  updatedAt DateTime @default(now())
+
+  @@index([updatedAt])
+}

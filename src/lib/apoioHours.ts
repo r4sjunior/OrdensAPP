@@ -5,6 +5,11 @@ import { todayISO } from "./dates";
 export const APOIO_START = "07:40";
 export const APOIO_END = "20:00";
 
+// Mapa da equipe: sem posição nova há mais de 10 min o carrinho fica cinza com
+// "última vez às HH:MM"; depois de 30 min sem atualizar o técnico some do mapa.
+export const LOCATION_STALE_MS = 10 * 60 * 1000;
+export const LOCATION_MAX_AGE_MS = 30 * 60 * 1000;
+
 // Brasília sem horário de verão: -03:00 fixo.
 function at(dayISO: string, hhmm: string) {
   return new Date(`${dayISO}T${hhmm}:00-03:00`).getTime();

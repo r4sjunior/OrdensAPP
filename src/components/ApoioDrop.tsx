@@ -545,6 +545,13 @@ export default function ApoioDrop() {
 
             <div className="mt-4 w-full space-y-3">
               <MapButtons r={fullScreen} />
+              <a
+                href="/mapa"
+                onClick={() => minimize(fullScreen.id)}
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-white/15 px-3 py-2.5 text-sm font-semibold text-white ring-1 ring-white/40 backdrop-blur transition hover:bg-white/25"
+              >
+                🚐 Ver técnicos mais perto no mapa
+              </a>
               <button
                 type="button"
                 onClick={() => accept(fullScreen)}
