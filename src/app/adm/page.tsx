@@ -4,6 +4,7 @@ import { getOpenDraw, getParticipants, toView, type Participant } from "@/lib/dr
 import { campaignPhase, CAMPAIGN } from "@/lib/campaign";
 import AdmLogin from "@/components/AdmLogin";
 import AdmPanel from "@/components/AdmPanel";
+import { getVoteReport } from "@/lib/vote";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "ADM — Sorteio da Caixinha de Gela", robots: { index: false } };
@@ -14,14 +15,16 @@ export default async function AdmPage() {
     return <AdmLogin configured={!!process.env.ADM_USER && !!process.env.ADM_PASSWORD} />;
   }
 
-  const [participants, open, history] = await Promise.all([
+  const [participants, open, history, voteReport] = await Promise.all([
     getParticipants(),
     getOpenDraw(true),
     prisma.draw.findMany({ orderBy: { createdAt: "desc" }, take: 20 }),
+    getVoteReport().catch(() => null),
   ]);
 
   return (
     <AdmPanel
+      voteReport={voteReport}
       participants={participants.sort((a, b) => b.weight - a.weight)}
       openDraw={open ? toView(open, null) : null}
       phase={campaignPhase()}

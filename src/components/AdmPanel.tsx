@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import type { DrawView, Participant } from "@/lib/draw";
 import type { CampaignPhase } from "@/lib/campaign";
 import DrawShow from "./DrawShow";
+import AdmVoteReport from "./AdmVoteReport";
+import type { VoteReport } from "@/lib/vote";
 import { useDrawView } from "./useDrawView";
 
 type HistoryItem = {
@@ -31,7 +33,9 @@ export default function AdmPanel({
   phase,
   campaignEnd,
   history,
+  voteReport,
 }: {
+  voteReport: VoteReport | null;
   participants: Participant[];
   openDraw: DrawView | null;
   phase: CampaignPhase;
@@ -167,6 +171,8 @@ export default function AdmPanel({
         )}
         {error && <p className="mt-3 text-sm text-stamp">{error}</p>}
       </section>
+
+      {voteReport && <AdmVoteReport report={voteReport} />}
 
       <section className="mt-6 card p-4 sm:p-6">
         <h2 className="font-display text-lg font-bold text-ink">Na roda</h2>

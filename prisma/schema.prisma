@@ -106,3 +106,28 @@ model UserLocation {
 
   @@index([updatedAt])
 }
+
+// Votação sigilosa (ex.: aprovar o mapa da equipe). Não existe voto individual gravado:
+// a contagem (sim/não) fica num único campo criptografado (AES-256-GCM) que é aberto,
+// somado e regravado a cada voto. Quem já votou fica em VoteVoter só como hash (HMAC),
+// sem horário e sem o voto, apenas para ninguém votar duas vezes. No fim ficam só os totais.
+model VotePoll {
+  id          String    @id
+  startsAt    DateTime
+  eligible    Int // técnicos ativos que podem votar (fixado na abertura)
+  tallyCipher String // contagem criptografada { sim, nao }
+  closedAt    DateTime?
+  closedBy    String? // "todos" (todos os ativos votaram) | "adm"
+  yes         Int? // totais, preenchidos só no encerramento
+  no          Int?
+  voted       Int?
+  outcome     String? // "aprovado" | "rejeitado"
+  createdAt   DateTime  @default(now())
+}
+
+model VoteVoter {
+  pollId    String
+  voterHash String // HMAC do usuário: não dá para voltar ao nome sem a chave
+
+  @@id([pollId, voterHash])
+}

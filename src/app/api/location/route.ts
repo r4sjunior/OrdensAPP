@@ -2,8 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getTeamMap, saveLocation } from "@/lib/teamMap";
 import { APOIO_END, APOIO_START } from "@/lib/apoioHours";
+import { mapaFeature } from "@/lib/vote";
 
 export const dynamic = "force-dynamic";
+
+// O mapa da equipe só funciona se a equipe aprovou na votação (ver lib/vote.ts).
+async function blocked() {
+  const feature = await mapaFeature();
+  if (feature === "approved") return null;
+  return NextResponse.json(
+    {
+      error:
+        feature === "rejected"
+          ? "O mapa da equipe foi removido por decisão da equipe na votação."
+          : "O mapa da equipe está desativado aguardando a aprovação dos técnicos ativos na votação.",
+      feature,
+    },
+    { status: 403 }
+  );
+}
 
 // GET /api/location -> técnicos no mapa + pedidos de SOS abertos (vazio fora do horário)
 export async function GET() {
@@ -11,6 +28,8 @@ export async function GET() {
   if (!userId) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
+  const off = await blocked();
+  if (off) return off;
   return NextResponse.json(await getTeamMap(userId));
 }
 
@@ -21,6 +40,8 @@ export async function POST(req: NextRequest) {
   if (!userId) {
     return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
+  const off = await blocked();
+  if (off) return off;
 
   const body = await req.json().catch(() => ({}));
   const lat = Number(body?.lat);

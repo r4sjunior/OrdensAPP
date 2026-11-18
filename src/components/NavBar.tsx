@@ -6,10 +6,15 @@ import LiveDraw from "./LiveDraw";
 import ApoioDrop from "./ApoioDrop";
 import StatusBar from "./StatusBar";
 import LocationShare from "./LocationShare";
+import MapaVote from "./MapaVote";
+import { getMapaVoteState } from "@/lib/vote";
 
 export default async function NavBar({ active }: { active: "dashboard" | "extrato" | "rose" | "perfil" | "mapa" }) {
   const user = await currentUser();
   const email = user?.primaryEmailAddress?.emailAddress;
+  // Mapa da equipe: desativado até a votação; some do app se a equipe rejeitar.
+  const vote = await getMapaVoteState(user?.id ?? null).catch(() => null);
+  const mapa = vote?.feature ?? "pending";
 
   return (
     // O desfoque fica numa camada à parte: backdrop-filter no próprio header prenderia
@@ -18,19 +23,26 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
       <div className="absolute inset-0 -z-10 bg-white/70 backdrop-blur-xl" aria-hidden />
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
         <div className="flex items-center gap-4 sm:gap-8">
-          <Link
-            href="/mapa"
-            title="Mapa da equipe (SOS DROP)"
-            aria-label="Mapa da equipe"
-            className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-stamp to-stampDark font-display text-xs font-bold text-white shadow-md shadow-stamp/30 transition active:scale-95 max-[379px]:hidden ${
-              active === "mapa" ? "ring-2 ring-stamp ring-offset-2" : "hover:brightness-110"
-            }`}
-          >
-            OS
-            <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white text-[8px] shadow ring-1 ring-black/10" aria-hidden>
-              📍
+          {mapa === "rejected" ? (
+            // Equipe rejeitou o mapa: o logo volta a ser só o logo.
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-stamp to-stampDark font-display text-xs font-bold text-white shadow-md shadow-stamp/30 max-[379px]:hidden">
+              OS
             </span>
-          </Link>
+          ) : (
+            <Link
+              href="/mapa"
+              title={mapa === "approved" ? "Mapa da equipe (SOS DROP)" : "Mapa da equipe — desativado aguardando a votação"}
+              aria-label="Mapa da equipe"
+              className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-stamp to-stampDark font-display text-xs font-bold text-white shadow-md shadow-stamp/30 transition active:scale-95 max-[379px]:hidden ${
+                active === "mapa" ? "ring-2 ring-stamp ring-offset-2" : "hover:brightness-110"
+              }`}
+            >
+              OS
+              <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white text-[8px] shadow ring-1 ring-black/10" aria-hidden>
+                {mapa === "approved" ? "📍" : "🔒"}
+              </span>
+            </Link>
+          )}
           <nav className="flex items-center gap-1 text-sm sm:gap-2 [&>a]:rounded-xl [&>a]:px-2 [&>a]:py-1.5 [&>a]:transition sm:[&>a]:px-3">
             <Link
               href="/rose"
@@ -78,7 +90,7 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
         <div className="flex items-center gap-3 sm:gap-4">
           <OnlineBadge />
           <LiveDraw />
-          <ApoioDrop />
+          <ApoioDrop mapa={mapa === "approved"} />
           {email && (
             <span className="hidden text-xs text-inkSoft md:inline">{email}</span>
           )}
@@ -106,8 +118,9 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
       {/* Faixas do SOS DROP (pedido minimizado, "ajuda a caminho"...): ficam dentro do
           header, empurrando a página para baixo em vez de cobrir o menu. */}
       <div id="apoio-faixas" />
+      {vote && <MapaVote initial={vote} />}
       <StatusBar />
-      <LocationShare />
+      {mapa === "approved" && <LocationShare />}
     </header>
   );
 }

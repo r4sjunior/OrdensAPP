@@ -147,7 +147,7 @@ function getPosition(): Promise<GeolocationPosition> {
   });
 }
 
-export default function ApoioDrop() {
+export default function ApoioDrop({ mapa = false }: { mapa?: boolean }) {
   const [requests, setRequests] = useState<HelpView[]>([]);
   const [offset, setOffset] = useState(0); // relógio do servidor - relógio do aparelho
   const [now, setNow] = useState(() => Date.now());
@@ -562,6 +562,8 @@ export default function ApoioDrop() {
 
             <div className="mt-4 w-full space-y-3">
               <MapButtons r={fullScreen} />
+              {/* Mapa da equipe só aparece se a equipe aprovou na votação. */}
+              {mapa && (
               <a
                 href="/mapa"
                 onClick={() => minimize(fullScreen.id)}
@@ -569,6 +571,7 @@ export default function ApoioDrop() {
               >
                 🚐 Ver técnicos mais perto no mapa
               </a>
+              )}
               <button
                 type="button"
                 onClick={() => accept(fullScreen)}

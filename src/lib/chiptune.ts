@@ -170,6 +170,33 @@ export const CHAMADA_SONG: Song = {
   ],
 };
 
+// Vídeo da votação do mapa (≈42s): tema original calmo a 96 bpm, 4 frases de 4
+// compassos + final. A 3ª frase (privacidade/desativado) desce para menor.
+const MAPA_A: Note[] = [
+  ["E5", 1], ["G5", 1], ["C6", 1.5], ["G5", 0.5], ["A5", 1], ["G5", 1], ["E5", 2],
+  ["F5", 1], ["A5", 1], ["G5", 1], ["E5", 1], ["D5", 2], [null, 2],
+];
+const MAPA_B: Note[] = [
+  ["E5", 1], ["G5", 1], ["C6", 1.5], ["D6", 0.5], ["E6", 1], ["D6", 1], ["C6", 2],
+  ["A5", 1], ["B5", 1], ["C6", 1], ["D6", 1], ["G5", 2], [null, 2],
+];
+const MAPA_MINOR: Note[] = [
+  ["A4", 1], ["C5", 1], ["E5", 1.5], ["C5", 0.5], ["D5", 1], ["C5", 1], ["A4", 2],
+  ["F4", 1], ["A4", 1], ["G4", 1], ["B4", 1], ["E5", 2], [null, 2],
+];
+const bassBar = (a: string, b: string): Note[] => [[a, 1], [b, 1], [a, 1], [b, 1]];
+export const MAPA_SONG: Song = {
+  bpm: 96,
+  melody: [...MAPA_A, ...MAPA_B, ...MAPA_MINOR, ...MAPA_B, ["C6", 1], ["G5", 0.5], ["C6", 0.5], ["E6", 2]],
+  bass: [
+    ...bassBar("C3", "G3"), ...bassBar("A2", "E3"), ...bassBar("F2", "C3"), ...bassBar("G2", "D3"),
+    ...bassBar("C3", "G3"), ...bassBar("A2", "E3"), ...bassBar("F2", "C3"), ...bassBar("G2", "D3"),
+    ...bassBar("A2", "E3"), ...bassBar("F2", "C3"), ...bassBar("D3", "A3"), ...bassBar("E2", "B2"),
+    ...bassBar("F2", "C3"), ...bassBar("G2", "D3"), ...bassBar("C3", "G3"), ...bassBar("G2", "D3"),
+    ["C3", 2], ["C3", 2],
+  ],
+};
+
 // Vinheta de Natal (01/12): refrão de "Jingle Bells" (melodia tradicional, domínio
 // público) em 8-bit. 8 compassos a 160 bpm = 12s. Batidas das partes da árvore
 // encaixando em 1,5s / 3s / 4,5s e o brilho da estrela em 9s.
