@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import type { HelpView } from "@/lib/apoio";
 import { HELP_ON_THE_WAY_SONG, playSong, sharedAudio, siren, unlockAudio } from "@/lib/chiptune";
 import { ensurePushSubscription, isIosBrowser, pushStatus, type PushStatus } from "@/lib/pushClient";
@@ -157,6 +158,9 @@ export default function ApoioDrop() {
   const [push, setPush] = useState<PushStatus>("granted");
   const [promptLater, setPromptLater] = useState(true);
   const [live, setLive] = useState(false); // stream de tempo real conectado
+  const [stripSlot, setStripSlot] = useState<HTMLElement | null>(null);
+
+  useEffect(() => setStripSlot(document.getElementById("apoio-faixas")), []);
 
   const refresh = useCallback(async () => {
     try {
@@ -409,11 +413,19 @@ export default function ApoioDrop() {
   const fullScreen = othersOpen.find((r) => !minimized.has(r.id));
   const showPushPrompt = !promptLater && (push === "prompt" || (push === "unsupported" && isIosBrowser()));
   const showPushDenied = !promptLater && push === "denied";
+  const hasStrip = othersOpen.some((r) => minimized.has(r.id)) || !!mine || accepted.length > 0 || showPushDenied;
 
-  return (
-    <>
-      {/* Faixas no topo: pedidos minimizados, o meu pedido, "ajuda a caminho", ativar alertas */}
-      <div className="fixed inset-x-0 top-0 z-[75] flex flex-col gap-1 p-2">
+  // Faixas no topo: pedidos minimizados, o meu pedido, "ajuda a caminho", alertas bloqueados.
+  // Vão para dentro do header (#apoio-faixas), no fluxo da página: assim não cobrem o
+  // menu (Registrar/Extrato) nem o conteúdo. Sem o slot, ficam fixas sem bloquear toques.
+  const strip = hasStrip ? (
+    <div
+      className={
+        stripSlot
+          ? "mx-auto flex max-h-[45vh] max-w-3xl flex-col gap-1 overflow-y-auto px-2 pb-2 sm:px-4"
+          : "pointer-events-none fixed inset-x-0 top-0 z-[75] flex flex-col gap-1 p-2 [&>*]:pointer-events-auto"
+      }
+    >
         {othersOpen
           .filter((r) => minimized.has(r.id))
           .map((r) => (
@@ -484,7 +496,12 @@ export default function ApoioDrop() {
             </button>
           </div>
         )}
-      </div>
+    </div>
+  ) : null;
+
+  return (
+    <>
+      {strip && (stripSlot ? createPortal(strip, stripSlot) : strip)}
 
       {/* Pedido para ativar os alertas: sem isso o SOS só aparece com o app aberto. */}
       {showPushPrompt && !fullScreen && modal === "closed" && (

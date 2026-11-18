@@ -103,6 +103,9 @@ export default async function NavBar({ active }: { active: "dashboard" | "extrat
           </SignOutButton>
         </div>
       </div>
+      {/* Faixas do SOS DROP (pedido minimizado, "ajuda a caminho"...): ficam dentro do
+          header, empurrando a página para baixo em vez de cobrir o menu. */}
+      <div id="apoio-faixas" />
       <StatusBar />
       <LocationShare />
     </header>
