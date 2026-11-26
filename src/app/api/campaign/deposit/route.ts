@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (!Number.isInteger(amount) || amount <= 0) {
     return NextResponse.json({ error: "Quantidade inválida" }, { status: 400 });
   }
-  // Tickets só podem ser usados durante a campanha (01/11 a 11/12; no último dia o
+  // Tickets só podem ser usados durante a campanha (01/11 a 10/12; no último dia o
   // depósito fica aberto até 23h59, depois do fechamento dos tickets às 20h).
   const phase = campaignPhase();
   if (phase === "before") {

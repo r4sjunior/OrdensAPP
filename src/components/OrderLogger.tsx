@@ -123,7 +123,7 @@ export default function OrderLogger({
 
   return (
     <div>
-      {/* Depois do fim da campanha (a partir de 12/12) o card do sorteio some sozinho. */}
+      {/* Depois do fim da campanha (a partir de 11/12) o card do sorteio some sozinho. */}
       {initialCampaign.phase !== "ended" && (
         <CampaignCard initial={initialCampaign} refreshKey={campaignKey} />
       )}

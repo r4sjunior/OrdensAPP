@@ -35,7 +35,7 @@ async function listAllUsers() {
 }
 
 // Entram na roleta só as contas que registraram pelo menos uma OS válida DURANTE a
-// campanha (01/11 a 11/12 às 20h, lançada no próprio dia). Quem não lançou nada nesse
+// campanha (01/11 a 10/12 às 20h, lançada no próprio dia). Quem não lançou nada nesse
 // período (contas de teste, quem só usou antes) fica de fora.
 export async function getParticipants(): Promise<Participant[]> {
   const [users, tickets, deposits] = await Promise.all([
