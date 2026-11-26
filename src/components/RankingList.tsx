@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { TAUNTS, trackMyPosition, type TauntKind } from "@/lib/podiumTaunts";
 
 type Entry = { position: number; orders: number; isMe: boolean; avatarUrl: string | null };
 
@@ -30,6 +31,62 @@ function Avatar({ url, size, ring }: { url: string | null; size: number; ring?: 
       style={style}
     />
   );
+}
+
+// Frase aleatória sorteada de novo a cada movimentação do ranking (`moves` muda quando
+// alguém sobe, cai ou registra OS); nunca repete a frase anterior.
+function useTaunt(kind: TauntKind | null, moves: string) {
+  const [index, setIndex] = useState(() => Math.floor(Math.random() * 20));
+  useEffect(() => {
+    if (!kind) return;
+    const n = TAUNTS[kind].length;
+    setIndex((i) => (i + 1 + Math.floor(Math.random() * (n - 1))) % n);
+  }, [kind, moves]);
+  if (!kind) return null;
+  const list = TAUNTS[kind];
+  return list[index % list.length];
+}
+
+const BUBBLE_STYLE: Record<TauntKind, string> = {
+  leader: "bg-amber-50 text-amber-900 ring-amber-300",
+  lost: "bg-rose-50 text-rose-900 ring-rose-300",
+  passed: "bg-sky-50 text-sky-900 ring-sky-300",
+};
+const TAIL_STYLE: Record<TauntKind, string> = {
+  leader: "bg-amber-50 ring-amber-300",
+  lost: "bg-rose-50 ring-rose-300",
+  passed: "bg-sky-50 ring-sky-300",
+};
+
+// Balão de fala. `tail` = de que lado fica o "biquinho": embaixo (pódio) ou à esquerda (lista).
+function SpeechBubble({ kind, tail, moves, className = "" }: { kind: TauntKind; tail: "bottom" | "left"; moves: string; className?: string }) {
+  const text = useTaunt(kind, moves);
+  if (!text) return null;
+  return (
+    <span
+      key={text}
+      role="status"
+      className={`relative inline-block animate-pop-in rounded-2xl px-2.5 py-1 text-[11px] font-semibold leading-tight shadow-md ring-1 ${BUBBLE_STYLE[kind]} ${className}`}
+    >
+      {text}
+      <span
+        aria-hidden
+        className={`absolute h-2.5 w-2.5 rotate-45 ${TAIL_STYLE[kind]} ${
+          tail === "bottom"
+            ? "-bottom-1 left-1/2 -translate-x-1/2 [clip-path:polygon(100%_0,100%_100%,0_100%)] ring-1"
+            : "-left-1 top-1/2 -translate-y-1/2 [clip-path:polygon(0_0,0_100%,100%_100%)] ring-1"
+        }`}
+      />
+    </span>
+  );
+}
+
+// Qual balão cada linha mostra: o 1º sempre provoca como líder; no próprio usuário,
+// se ele acabou de cair, o balão de queda (o ranking é anônimo, então só sabemos a nossa).
+function tauntFor(e: Entry, myDrop: "lost" | "passed" | null): TauntKind | null {
+  if (e.position === 1) return "leader";
+  if (e.isMe && myDrop) return myDrop;
+  return null;
 }
 
 const TROPHY_COLOR: Record<number, string> = {
@@ -99,14 +156,22 @@ function useCountUp(target: number, delay: number, ms = 900) {
   return value;
 }
 
-function PodiumSpot({ p, e }: { p: number; e: Entry | undefined }) {
+function PodiumSpot({ p, e, myDrop, moves }: { p: number; e: Entry | undefined; myDrop: "lost" | "passed" | null; moves: string }) {
   const delay = RISE_DELAY[p];
+  const taunt = e ? tauntFor(e, myDrop) : null;
   const count = useCountUp(e?.orders ?? 0, delay + 400);
   const first = p === 1;
   return (
     <div className="flex w-24 flex-col items-center sm:w-28">
       {e ? (
         <div className="relative animate-pop-in" style={{ animationDelay: `${delay + 500}ms` }}>
+          {taunt && (
+            <div
+              className={`absolute left-1/2 z-10 w-36 -translate-x-1/2 text-center ${first ? "bottom-full mb-8" : "bottom-full mb-2"}`}
+            >
+              <SpeechBubble kind={taunt} tail="bottom" moves={moves} />
+            </div>
+          )}
           {first && (
             <>
               <span className="absolute -top-7 left-1/2 -translate-x-1/2 animate-float text-2xl drop-shadow" aria-hidden>
@@ -149,15 +214,34 @@ function PodiumSpot({ p, e }: { p: number; e: Entry | undefined }) {
 
 // Pódio clássico: 2º à esquerda, 1º no centro (mais alto), 3º à direita. Os degraus
 // sobem um de cada vez, as fotos aparecem em seguida e o 1º ganha coroa e brilho.
-function Podium({ entries }: { entries: Entry[] }) {
+function Podium({ entries, myDrop, moves }: { entries: Entry[]; myDrop: "lost" | "passed" | null; moves: string }) {
   const byPosition = (p: number) => entries.find((e) => e.position === p);
+  const meOutside = !entries.some((e) => e.isMe);
   return (
-    <div className="flex items-end justify-center gap-2 pt-8 sm:gap-3">
-      {[2, 1, 3].map((p) => (
-        <PodiumSpot key={p} p={p} e={byPosition(p)} />
-      ))}
+    <>
+      <div className="flex items-end justify-center gap-2 pt-20 sm:gap-3">
+        {[2, 1, 3].map((p) => (
+          <PodiumSpot key={p} p={p} e={byPosition(p)} myDrop={myDrop} moves={moves} />
+        ))}
+      </div>
+      {meOutside && myDrop && <MeOutside kind={myDrop} moves={moves} />}
+    </>
+  );
+}
+
+// Quando o usuário caiu e saiu do pódio/lista, o balão dele aparece embaixo.
+function MeOutside({ kind, moves }: { kind: "lost" | "passed"; moves: string }) {
+  return (
+    <div className="mt-4 flex items-center justify-center gap-3">
+      <span className="text-xs font-semibold text-stamp">Você</span>
+      <SpeechBubble kind={kind} tail="left" moves={moves} />
     </div>
   );
+}
+
+// "Retrato" do ranking: muda quando alguém troca de posição ou registra mais OS.
+function signature(list: Entry[]) {
+  return list.map((e) => `${e.position}:${e.orders}:${e.isMe ? 1 : 0}:${e.avatarUrl ?? ""}`).join("|");
 }
 
 // Ranking anônimo: só posição e número de ordens; o usuário logado aparece como "Você".
@@ -175,6 +259,7 @@ export default function RankingList({
   subtitle: string;
 }) {
   const [entries, setEntries] = useState<Entry[] | null>(null);
+  const [myDrop, setMyDrop] = useState<"lost" | "passed" | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -183,18 +268,34 @@ export default function RankingList({
     if (date && type !== "general") params.set("date", date);
     if (top) params.set("top", String(top));
     const qs = params.toString();
-    fetch(`/api/orders/ranking?${qs}`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (!cancelled) setEntries(data.entries ?? []);
-      })
-      .catch(() => {
-        if (!cancelled) setEntries([]);
-      });
+    const key = `rank-pos:${type}:${type === "general" ? "all" : date ?? "today"}:${top ?? "all"}`;
+    const load = () =>
+      fetch(`/api/orders/ranking?${qs}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (cancelled) return;
+          const list: Entry[] = data.entries ?? [];
+          // Só troca o estado se algo mudou, para não reanimar o pódio à toa.
+          setEntries((prev) => (prev && signature(prev) === signature(list) ? prev : list));
+          // Fora da lista conta como uma posição abaixo do último mostrado.
+          const me = list.find((e) => e.isMe);
+          setMyDrop(trackMyPosition(key, me?.position ?? null, Math.max(list.length, top ?? 3) + 1));
+        })
+        .catch(() => {
+          if (!cancelled) setEntries((prev) => prev ?? []);
+        });
+    load();
+    // Atualiza sozinho a cada minuto (com a tela visível) para mostrar as ultrapassagens.
+    const id = setInterval(() => {
+      if (document.visibilityState === "visible") load();
+    }, 60_000);
     return () => {
       cancelled = true;
+      clearInterval(id);
     };
   }, [type, date, top]);
+
+  const moves = entries ? signature(entries) : "";
 
   // Pódio para os rankings top 3 (diário, semanal e campeões do mês); lista para o resto.
   const showPodium = type === "daily" || type === "weekly" || top === 3;
@@ -209,8 +310,9 @@ export default function RankingList({
       ) : entries.length === 0 ? (
         <p className="text-sm text-inkSoft">Nenhuma ordem registrada no período.</p>
       ) : showPodium ? (
-        <Podium entries={entries} />
+        <Podium entries={entries} myDrop={myDrop} moves={moves} />
       ) : (
+        <>
         <ol className="space-y-1.5">
           {entries.map((e, i) => (
             <li
@@ -220,12 +322,13 @@ export default function RankingList({
               }`}
               style={{ animationDelay: `${Math.min(i, 12) * 45}ms` }}
             >
-              <div className="flex items-center gap-3">
-                <span className="w-8 font-display text-lg font-bold text-stamp">
+              <div className="flex min-w-0 items-center gap-3">
+                <span className="w-8 shrink-0 font-display text-lg font-bold text-stamp">
                   {e.position}º
                 </span>
                 <Avatar url={e.avatarUrl} size={32} />
-                {e.isMe && <span className="text-xs font-medium text-ink">Você</span>}
+                {e.isMe && <span className="shrink-0 text-xs font-medium text-ink">Você</span>}
+                {tauntFor(e, myDrop) && <SpeechBubble kind={tauntFor(e, myDrop)!} tail="left" moves={moves} className="ml-1" />}
               </div>
               <span className="font-mono text-lg font-semibold tabular-nums text-ink">
                 {e.orders}{" "}
@@ -234,6 +337,8 @@ export default function RankingList({
             </li>
           ))}
         </ol>
+        {!entries.some((e) => e.isMe) && myDrop && <MeOutside kind={myDrop} moves={moves} />}
+        </>
       )}
     </div>
   );

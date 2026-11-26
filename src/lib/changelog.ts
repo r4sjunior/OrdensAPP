@@ -7,6 +7,7 @@ export type Update = {
 };
 
 export const UPDATES: Update[] = [
+  { date: "2026-11-26", text: "Pódio e ranking com balões de fala: o líder provoca e quem é ultrapassado reclama" },
   { date: "2026-11-26", text: "Caixinha de Gela: o sorteio agora é dia 10/12 e a campanha termina nesse dia (tickets valem até as 20h)" },
   { date: "2026-11-18", text: "Mapa da equipe desativado: a localização só volta se a equipe aprovar na votação secreta (a partir de 19/11)" },
   { date: "2026-11-17", text: "Novo mapa da equipe: toque no logo OS no topo e veja qual técnico está mais perto (07:40 às 20:00)" },
